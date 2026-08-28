@@ -1,4 +1,5 @@
 Kurulum Rehberi
+
 Projeyi kendi bilgisayarınızda çalıştırmak için aşağıdaki adımları takip edin:
 
 1. Veritabanı Entegrasyonu
