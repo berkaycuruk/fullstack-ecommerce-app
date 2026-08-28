@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <!-- Karakter kodlaması ve mobil cihazlar için responsive ekran tanımı -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B&S Store</title>
+    <!-- Projenin genel CSS stil dosyası bağlantısı -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ========================================================================= -->
+    <!-- 1. ÜST KAMPANYA BANNER ALANI -->
+    <!-- ========================================================================= -->
+    <header>
+        <!-- <nav>
+            <a href="#">Ana Sayfa</a>
+        </nav> -->
+        <img class="header-img"
+            src="https://i.dr.com.tr/pimages/Content/Uploads/BannerFiles/dr/2026-TEMMUZ-SERINLETEN-URUNLER-HELLO-BAR1140X60.webp"
+            alt="">
+    </header>
+
+    <!-- ========================================================================= -->
+    <!-- 2. ANA HEADER (LOGO, GLOBAL ARAMA, İNDİRİMLER VE KULLANICI DROPDOWN MENÜSÜ) -->
+    <!-- ========================================================================= -->
+    <header class="header1">
+
+        <!-- Logo alanı: Ana sayfaya yönlendirir -->
+        <!-- LOGO -->
+        <div class="logo">
+            <a href="/">
+                <img class="logo_img" src="/image/logo.jpg" alt="Logo">
+            </a>
+        </div>
+
+        <!-- Ürün Arama Formu: /api/genel endpoint'ine 'kelime' GET parametresi gönderir -->
+        <!-- SEARCH -->
+        <div class="search-box">
+            <form class="search-container" action="http://localhost:5192/api/genel" method="GET" role="search">
+
+                <div class="search-input-wrapper">
+                    <input type="search" class="search-input" name="kelime"
+                        placeholder="Ürün, kategori veya marka arayın..." maxlength="60" autocomplete="off"
+                        aria-label="Ürün arama" />
+                </div>
+
+                <button type="submit" class="search-submit-btn">Ara</button>
+            </form>
+        </div>
+
+        <!-- İndirimli Ürünleri Filtreleyen Buton (script.js üzerinden indirimli ürünleri çeker) -->
+        <span><button class="search-discount" type="button" onclick="indirimliUrunleriGetir()">İndirimli
+                Ürünler</button></span>
+
+        <!-- Kullanıcı Aksiyon Menüsü (Giriş/Kayıt, Profil Dropdown, Favoriler, Sepet) -->
+        <div class="header1-actions">
+
+            <!-- Ziyaretçi Giriş/Kayıt Butonu (Kullanıcı oturum açtığında 'd-none' eklenerek gizlenir) -->
+            <a href="uye.html" class="header1-item" id="nav-login-btn">
+                <span class="icon">👤</span>
+                <span>Giriş Yap/Kayıt Ol</span>
+            </a>
+
+            <!-- Aktif Kullanıcı Profil Menüsü (Oturum açıkken 'd-none' kaldırılarak gösterilir) -->
+            <div class="header1-item user-dropdown d-none" id="user-menu">
+                <div class="user-dropdown-trigger">
+                    <span class="icon">👤</span>
+                    <span>Hesabım</span>
+                </div>
+                <div class="dropdown-content">
+                    <div class="user-info-row">
+                        <!-- Kullanıcı ad-soyad baş harfleri avatarı -->
+                        <div class="user-avatar" id="user-avatar-badge">BÇ</div>
+                        <div class="user-details">
+                            <span class="greeting">Merhaba</span>
+                            <!-- Kullanıcı tam adı dinamik basılır -->
+                            <span class="user-fullname" id="user-fullname">Berkay ÇÜRÜK</span>
+                        </div>
+                    </div>
+                    <hr class="dropdown-divider">
+
+                    <!-- Kullanıcı profil/adres yönetim linki -->
+                    <a href="hesabim.html" class="dropdown-menu-item"
+                        style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; text-decoration: none; color: #334155; font-size: 14px; border-radius: 6px; transition: background-color 0.2s;">
+                        <span>👤</span>
+                        <span>Hesabım</span>
+                    </a>
+
+                    <hr class="dropdown-divider">
+
+                    <!-- Siparişlerim sayfası linki -->
+                    <a href="siparis.html" class="dropdown-menu-item"
+                        style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; text-decoration: none; color: #334155; font-size: 14px; border-radius: 6px; transition: background-color 0.2s;">
+                        <span>📦</span>
+                        <span>Siparişlerim</span>
+                    </a>
+
+                    <hr class="dropdown-divider">
+                    <!-- Oturumu kapatıp localStorage'ı temizleyen buton -->
+                    <button id="logout-btn" class="logout-link" type="button">Çıkış Yap</button>
+                </div>
+            </div>
+
+            <!-- Favorilerim Kısayolu -->
+            <a href="favoriler.html" class="header1-item">
+                <span class="icon">♡</span>
+                <span>Favoriler</span>
+            </a>
+
+            <!-- Sepetim Kısayolu -->
+            <a href="sepet.html" class="header1-item">
+                <span class="icon">🛒</span>
+                <span>Sepetim</span>
+            </a>
+
+        </div>
+
+    </header>
+
+    <!-- Kategori Menü Butonları -->
+    <div class="kategori-div">
+        <span><button class="kategori" type="button"><a href='kitaplar.html'>Kitaplar</a></button></span>
+        <span><button class="kategori" type="button"><a href='elektronik.html'>Elektronik</a></button></span>
+        <span><button class="kategori" type="button"><a href='hobi.html'>Hobi</a></button></span>
+        <span><button class="kategori" type="button"><a href='kirtasiye.html'>Kırtasiye</a></button></span>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- 3. ANA SAYFA PROMOSYON GÖRSELLERİ VE ÇOKLU KATEGORİ SLIDER ALANI -->
+    <!-- ========================================================================= -->
+    <!-- Kırtasiye ve Kitap Promosyon Afişleri -->
+    <a href="kirtasiye.html"><img style="width: 75vw; height: auto; display: block; margin: 0 auto;"
+            src="image/okulicin her sey.jpg" alt="okul"></a>
+    <br>
+    <a href="kitaplar.html"><img style="width: 75vw; height: auto; display: block; margin: 0 auto;"
+            src="image/Odysseus_1024-x-400.webp" alt="Odysseia"></a>
+
+    <!-- Popüler Ürünler & Hızlı Arama Slider Pist'i -->
+    <div class="brand-slider-wrapper1">
+
+        <!-- Kaydırılabilir İç Kutu: Tıklanan ögenin data-kelime parametresiyle arama tetiklenir -->
+        <!-- Kaydırılabilir İç Kutu -->
+        <div class="brand-slider-track" id="sliderTrack">
+
+            <div class="brand-slide-item">
+                <a href="#" class="arama-butonu" data-kelime="odysseia" title="Odysseia">
+                    <img src="image/odyssia-300x300.webp" alt="Odysseia">
+                </a>
+                <strong><span class="brand-slide-title">Odysseia</span></strong>
+            </div>
+
+            <div class="brand-slide-item">
+                <a href="#" class="arama-butonu" title="Defterler" data-kelime="def">
+                    <img src="image/defter300.webp" alt="Defterler">
+                </a>
+                <strong><span class="brand-slide-title">Defterler</span></strong>
+            </div>
+
+            <div class="brand-slide-item">
+                <a href="kirtasiye.html">
+                    <img src="image/kirtasiye300.webp" alt="Kırtasiye">
+                </a>
+                <strong><span class="brand-slide-title">Kırtasiye</span></strong>
+            </div>
+
+            <div class="brand-slide-item">
+                <a href="#" class="arama-butonu" title="Matara" data-kelime="matara">
+                    <img src="image/matara300.webp" alt="Matara">
+                </a>
+                <strong><span class="brand-slide-title">Suluk&Matara</span></strong>
+            </div>
+
+            <div class="brand-slide-item">
+                <a href="kitaplar.html">
+                    <img src="image/cocuk_kitaplari300.webp" alt="Çocuk Kitapları">
+                </a>
+                <strong><span class="brand-slide-title">Çocuk Kitapları</span></strong>
+            </div>
+
+            <div class="brand-slide-item">
+                <a href="elektronik.html">
+                    <img src="image/SPOR.webp" alt="Spor">
+                </a>
+                <strong><span class="brand-slide-title">Spor</span></strong>
+            </div>
+
+            <div class="brand-slide-item">
+                <a href="elektronik.html">
+                    <img src="image/instax-7-temmuz.webp" alt="Fotoğraf ve Kamera">
+                </a>
+                <strong><span class="brand-slide-title">Fotoğraf</span></strong>
+            </div>
+
+            <div class="brand-slide-item">
+                <a href="#" class="arama-butonu" title="pikap" data-kelime="pikap">
+                    <img src="image//pikap300.webp" alt="pikap">
+                </a>
+                <strong><span class="brand-slide-title">Pikaplar</span></strong>
+            </div>
+
+            <div class="brand-slide-item">
+                <a href="kitaplar.html">
+                    <img src="image/cizgi_roman_manga300.webp" alt="Çizgi Roman & Manga">
+                </a>
+                <strong><span class="brand-slide-title">Çizgi Roman</span></strong>
+            </div>
+            <!-- <div class="brand-slide-item">
+                    <a href="#" class="arama-butonu" title="Alden Yayınları" data-kelime="Alden Yayınları">
+                        <img src="image/alden.jpg" alt="Alden Yayınları">
+                    </a>
+                    <strong><span class="brand-slide-title">Alden Yayınları</span></strong>
+                </div> -->
+
+        </div>
+
+    </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- 4. RASTGELE ÖNERİLEN ÜRÜNLER (CAROUSEL / SLIDER) BÖLÜMÜ -->
+    <!-- script.js tarafından rastgele ürünler çekilip bu alana render edilir -->
+    <!-- ========================================================================= -->
+    <section class="random-elektronik-section">
+
+        <div class="random-elektronik-header">
+            <h2>Önerilen Ürünler</h2>
+
+            <!-- Önerilen ürünler carousel ileri/geri yönlendirme butonları -->
+            <div>
+                <button type="button" id="randomGeri">‹</button>
+                <button type="button" id="randomIleri">›</button>
+            </div>
+        </div>
+
+        <!-- Ürün kartlarının yerleştirildiği kaydırılabilir wrapper -->
+        <div class="random-elektronik-wrapper">
+            <div id="randomElektronikGrid"></div>
+        </div>
+
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- 5. ÖZEL KAMPANYA VE VİTRİN KARTLARI DÜZENİ -->
+    <!-- ========================================================================= -->
+    <div class="kampanya-alani">
+
+        <!-- SOL BÜYÜK FOTOĞRAF -->
+        <div class="kampanya-buyuk">
+            <img src="image/segway.webp" alt="">
+        </div>
+
+        <!-- SAĞ TARAF (ÜST İKİ KÜÇÜK, ALT BİR BÜYÜK) -->
+        <!-- SAĞ TARAF -->
+        <div class="kampanya-sag">
+
+            <!-- SAĞ ÜST İKİ FOTOĞRAF -->
+            <div class="kampanya-ust">
+
+                <div class="kampanya-kucuk">
+                    <img src="image/oyuncukoltuk.webp" alt="">
+                </div>
+
+                <div class="kampanya-kucuk">
+                    <img src="image/powerbank.webp" alt="">
+                </div>
+
+            </div>
+
+            <!-- SAĞ ALT BÜYÜK FOTOĞRAF -->
+            <div class="kampanya-alt">
+                <img src="image/drona.webp" alt="">
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Alt Tanıtım Görseli -->
+    <img class="anasayfaenalt" src="image/anasayfaenalt.png" alt="">
+
+    <!-- ========================================================================= -->
+    <!-- 6. DİNAMİK ARAMA VE İNDİRİM SONUÇLARI GRID ALANLARI -->
+    <!-- Kullanıcı arama yaptığında veya indirimlere tıkladığında sonuçlar buraya basılır -->
+    <!-- ========================================================================= -->
+    <div class="products-grid" id="aramaSonuclari"></div>
+    <div class="products-grid" id="indirimliGrid"></div>
+
+    <!-- Genel site etkileşimleri, API istekleri ve slider mekanizması scripti -->
+    <script src="script.js"></script>
+
+    <script>
+        // Sayfa yüklendiğinde kullanıcı oturum durumunu doğrula ve header'ı senkronize et
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof kullaniciDurumunuKontrolEt === 'function') {
+                kullaniciDurumunuKontrolEt();
+            }
+        });
+    </script>
+</body>
+
+</html>

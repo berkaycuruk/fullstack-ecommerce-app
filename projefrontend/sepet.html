@@ -1,0 +1,2237 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <!-- Karakter seti ve mobil responsive ekran yerleşimi tanımları -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sepetim</title>
+    <!-- Projenin harici CSS stil dosyası bağlantısı -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ========================================================================= -->
+    <!-- 1. ÜST KAMPANYA VE DUYURU BANNERI -->
+    <!-- ========================================================================= -->
+    <!-- ÜST BANNER -->
+    <header>
+        <img class="header-img"
+            src="https://i.dr.com.tr/pimages/Content/Uploads/BannerFiles/dr/2026-TEMMUZ-SERINLETEN-URUNLER-HELLO-BAR1140X60.webp"
+            alt="">
+    </header>
+
+    <!-- ========================================================================= -->
+    <!-- 2. ANA HEADER (LOGO, ARAMA FORMU, İNDİRİMLER VE KULLANICI PROFİL MENÜSÜ) -->
+    <!-- ========================================================================= -->
+    <!-- ANA HEADER -->
+    <header class="header1">
+
+        <!-- Logo alanı: Ana sayfaya yönlendirir -->
+        <div class="logo">
+            <a href="index.html">
+                <img class="logo_img" src="/image/logo.jpg" alt="Logo">
+            </a>
+        </div>
+
+        <!-- Ürün Arama Çubuğu: Backend genel arama API endpoint'ine GET parametresi yollar -->
+        <div class="search-box">
+            <form class="search-container" action="http://localhost:5192/api/genel" method="GET" role="search">
+
+                <div class="search-input-wrapper">
+                    <input type="search" class="search-input" name="kelime"
+                        placeholder="Ürün, kategori veya marka arayın..." maxlength="60" autocomplete="off"
+                        aria-label="Ürün arama">
+                </div>
+
+                <button type="submit" class="search-submit-btn">
+                    Ara
+                </button>
+            </form>
+        </div>
+
+        <!-- İndirimli ürünleri doğrudan listeleyen tetikleyici buton (script.js üzerinden yönetilir) -->
+        <span>
+            <button class="search-discount" type="button" onclick="indirimliUrunleriGetir()">
+                İndirimli Ürünler
+            </button>
+        </span>
+
+        <!-- Kullanıcı Aksiyonları: Giriş/Kayıt veya Kullanıcı Profil Dropdown'ı -->
+        <!-- HEADER AKSİYONLARI -->
+        <div class="header1-actions">
+
+            <!-- Ziyaretçi Giriş/Kayıt Butonu (Kullanıcı giriş yaptığında JS tarafında 'd-none' sınıfı eklenir) -->
+            <a href="uye.html" class="header1-item" id="nav-login-btn">
+
+                <span class="icon">👤</span>
+                <span>Giriş Yap/Kayıt Ol</span>
+
+            </a>
+
+            <!-- Aktif Kullanıcı Hesabım Menüsü (Kullanıcı oturumu varsa 'd-none' kaldırılarak görünür yapılır) -->
+            <!-- KULLANICI MENÜSÜ -->
+            <div class="header1-item user-dropdown d-none" id="user-menu">
+
+                <div class="user-dropdown-trigger">
+                    <span class="icon">👤</span>
+                    <span>Hesabım</span>
+                </div>
+
+                <!-- Dropdown Menü İçeriği: Profil bilgileri, sipariş linkleri ve çıkış butonu -->
+                <div class="dropdown-content">
+
+                    <div class="user-info-row">
+
+                        <!-- Kullanıcı ad-soyad baş harfleri -->
+                        <div class="user-avatar" id="user-avatar-badge">
+                            BÇ
+                        </div>
+
+                        <!-- Kullanıcı tam adı dinamik basılır -->
+                        <div class="user-details">
+
+                            <span class="greeting">
+                                Merhaba
+                            </span>
+
+                            <span class="user-fullname" id="user-fullname">
+                                Kullanıcı Adı
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <hr class="dropdown-divider">
+
+                    <!-- Kullanıcı profil & adres yönetim sayfası linki -->
+                    <a href="hesabim.html" class="dropdown-menu-item"
+                        style="display:flex;align-items:center;gap:8px;padding:8px 12px;text-decoration:none;color:#334155;font-size:14px;border-radius:6px;">
+
+                        <span>👤</span>
+                        <span>Hesabım</span>
+
+                    </a>
+
+                    <!-- Geçmiş siparişlerin listelendiği sayfa linki -->
+                    <a href="siparis.html" class="dropdown-menu-item"
+                        style="display:flex;align-items:center;gap:8px;padding:8px 12px;text-decoration:none;color:#334155;font-size:14px;border-radius:6px;">
+
+                        <span>📦</span>
+                        <span>Siparişlerim</span>
+
+                    </a>
+
+                    <hr class="dropdown-divider">
+
+                    <!-- Oturumu kapatıp localStorage'ı temizleyen buton -->
+                    <button id="logout-btn" class="logout-link" type="button">
+                        Çıkış Yap
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- Favorilerim Kısayolu -->
+            <a href="favoriler.html" class="header1-item">
+
+                <span class="icon">♡</span>
+                <span>Favoriler</span>
+
+            </a>
+
+            <!-- Sepetim Kısayolu -->
+            <a href="sepet.html" class="header1-item">
+
+                <span class="icon">🛒</span>
+                <span>Sepetim</span>
+
+            </a>
+
+        </div>
+
+    </header>
+
+    <!-- Kategori Filtre Butonları -->
+    <!-- KATEGORİLER -->
+    <div class="kategori-div">
+
+        <span>
+            <button class="kategori" type="button">
+                <a href="kitaplar.html">Kitaplar</a>
+            </button>
+        </span>
+
+        <span>
+            <button class="kategori" type="button">
+                <a href="elektronik.html">Elektronik</a>
+            </button>
+        </span>
+
+        <span>
+            <button class="kategori" type="button">
+                <a href="hobi.html">Hobi</a>
+            </button>
+        </span>
+
+        <span>
+            <button class="kategori" type="button">
+                <a href="kirtasiye.html">Kırtasiye</a>
+            </button>
+        </span>
+
+    </div>
+
+
+    <!-- ========================================================================= -->
+    <!-- 3. KARGO İNDİRİMİ & ÜCRETSİZ KARGO İLERLEME (PROGRESS BAR) BİLEŞENİ -->
+    <!-- Sepet tutarına göre kargo baremlerini dinamik gösterir -->
+    <!-- ========================================================================= -->
+    <!-- KARGO BİLGİLENDİRME -->
+    <div class="shipping-progress-card">
+
+        <!-- Kargo baremine kalan tutar bilgilendirme metni -->
+        <div class="shipping-message" id="shipping-message">
+        </div>
+
+        <div class="shipping-stepper-container">
+
+            <!-- Dinamik doluluk çizgisi (Genişliği JS ile % olarak atanır) -->
+            <div class="shipping-track">
+                <div class="shipping-fill" id="shipping-fill">
+                </div>
+            </div>
+
+            <!-- 1. Aşama: 0 TL (Standart 79.90 TL Kargo) -->
+            <div class="step-point step-1 active" id="step-point-1">
+
+                <span class="step-target-price">
+                    0 TL
+                </span>
+
+                <div class="step-circle">
+                    ✓
+                </div>
+
+                <span class="step-info-label">
+                    Kargo Ücreti
+                </span>
+
+                <strong class="step-price-label">
+                    79,90 TL
+                </strong>
+
+            </div>
+
+            <!-- 2. Aşama: 500 TL (İndirimli 29.90 TL Kargo) -->
+            <div class="step-point step-2" id="step-point-2">
+
+                <span class="step-target-price">
+                    500 TL
+                </span>
+
+                <div class="step-circle">
+                    ✓
+                </div>
+
+                <span class="step-info-label">
+                    Kargo Ücreti
+                </span>
+
+                <strong class="step-price-label">
+                    29,90 TL
+                </strong>
+
+            </div>
+
+            <!-- 3. Aşama: 1000 TL (Kargo Ücretsiz) -->
+            <div class="step-point step-3" id="step-point-3">
+
+                <span class="step-target-price">
+                    1.000 TL
+                </span>
+
+                <div class="step-circle">
+                    ✓
+                </div>
+
+                <strong class="step-free-label">
+                    Kargo Bedava
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================================================================= -->
+    <!-- 4. ANA DÜZEN (SOL PROFİL MENÜSÜ + AŞAMALI SEPET/ADRES/ÖDEME FORMLARI) -->
+    <!-- ========================================================================= -->
+    <!-- ANA ALAN -->
+    <main class="cart-wrapper">
+
+        <!-- SOL MENÜ: Hesap kısayolları ve profil kartı -->
+        <!-- SOL MENÜ -->
+        <aside class="sidebar-wrapper">
+
+            <div class="dr-account-card" id="user-profile-menu">
+
+                <div class="user-header">
+
+                    <div class="user-avatar-sq" id="menu-avatar-badge">
+                        BÇ
+                    </div>
+
+                    <div class="user-text-info">
+
+                        <span class="greeting-text">
+                            Merhaba,
+                        </span>
+
+                        <strong class="user-fullname-text" id="menu-fullname">
+                            Kullanıcı Adı
+                        </strong>
+
+                    </div>
+
+                </div>
+
+                <ul class="account-menu-list">
+
+                    <li>
+                        <a href="hesabim.html" class="menu-link">
+                            <span>👤 Üyelik & Adreslerim</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="siparis.html" class="menu-link">
+                            <span>📦 Siparişlerim</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="favoriler.html" class="menu-link">
+                            <span>♡ Favorilerim</span>
+                        </a>
+                    </li>
+
+                </ul>
+
+                <div class="logout-wrapper">
+
+                    <button type="button" class="red-logout-btn" id="profile-logout-btn">
+
+                        Çıkış Yap
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </aside>
+
+
+        <!-- --------------------------------------------------------------------- -->
+        <!-- ADIM 1: SEPET LİSTESİ BÖLÜMÜ (#cart-section) -->
+        <!-- Kullanıcının eklediği ürünlerin dinamik basıldığı ilk görünüm -->
+        <!-- --------------------------------------------------------------------- -->
+        <!-- SEPET -->
+        <section class="cart-items-container" id="cart-section">
+
+            <h2>
+                Alışveriş Sepetim
+            </h2>
+
+            <hr style="border:0;border-top:1px solid #eee;margin:15px 0;">
+
+            <!-- script.js dosyasındaki sepetiYukle() fonksiyonunun ürün kartlarını bastığı kapsayıcı -->
+            <div id="cart-list"></div>
+
+        </section>
+
+
+        <!-- --------------------------------------------------------------------- -->
+        <!-- ADIM 2: TESLİMAT ADRESİ SEÇİM BÖLÜMÜ (#address-section) -->
+        <!-- Kayıtlı adreslerin radio buton olarak seçildiği veya yeni adres girildiği ekran -->
+        <!-- --------------------------------------------------------------------- -->
+        <!-- ADRES SEÇİMİ -->
+        <section class="cart-items-container" id="address-section" style="display:none;">
+
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+
+                <h2>
+                    Teslimat Adresi Seçin
+                </h2>
+
+                <!-- Sepet listesine geri dönme butonu -->
+                <button type="button" id="btn-back-to-cart"
+                    style="background:none;border:none;color:#2563eb;font-weight:600;cursor:pointer;">
+
+                    ← Sepete Geri Dön
+
+                </button>
+
+            </div>
+
+            <hr style="border:0;border-top:1px solid #eee;margin:15px 0;">
+
+            <h4 style="margin-bottom:10px;color:#333;">
+                Kayıtlı Adreslerim
+            </h4>
+
+            <!-- LocalStorage'daki adreslerin listelendiği dinamik div -->
+            <div id="checkout-address-list" style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
+            </div>
+
+
+            <!-- Hızlı Yeni Adres Ekleme Formu -->
+            <!-- YENİ ADRES -->
+            <div style="background:#f8fafc;border:1px solid #e2e8f0;padding:15px;border-radius:8px;">
+
+                <h4 style="margin-bottom:10px;color:#333;">
+                    ➕ Yeni Adres Ekle
+                </h4>
+
+                <div style="margin-bottom:8px;">
+
+                    <input type="text" id="inline-addr-title" placeholder="Adres Başlığı (Örn: Ev, İş)"
+                        style="width:100%;padding:8px;border:1px solid #cbd5e1;border-radius:6px;outline:none;">
+
+                </div>
+
+                <div style="margin-bottom:8px;">
+
+                    <textarea id="inline-addr-text" rows="2" placeholder="Mahalle, Sokak, No, Daire, İlçe/İl..."
+                        style="width:100%;padding:8px;border:1px solid #cbd5e1;border-radius:6px;outline:none;"></textarea>
+
+                </div>
+
+                <!-- Adresi hem localStorage'a kaydedip hem de seçili hale getiren buton -->
+                <button type="button" id="btn-save-inline-address"
+                    style="background-color:#10b981;color:white;border:none;padding:8px 14px;border-radius:6px;font-weight:600;cursor:pointer;">
+
+                    Adresi Kaydet ve Kullan
+
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- --------------------------------------------------------------------- -->
+        <!-- ADIM 3: GÜVENLİ ÖDEME FORMU BÖLÜMÜ (#payment-section) -->
+        <!-- iyzico Checkout Form scriptinin basıldığı güvenli ödeme alanı -->
+        <!-- --------------------------------------------------------------------- -->
+        <!-- ÖDEME -->
+        <section class="cart-items-container" id="payment-section" style="display:none;">
+
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+
+                <h2>
+                    Güvenli Ödeme Ekranı
+                </h2>
+
+                <!-- Adres seçimine geri dönme butonu -->
+                <button type="button" id="btn-back-to-address"
+                    style="background:none;border:none;color:#2563eb;font-weight:600;cursor:pointer;">
+
+                    ← Adres Seçimine Dön
+
+                </button>
+
+            </div>
+
+            <hr style="border:0;border-top:1px solid #eee;margin:15px 0;">
+
+            <!-- iyzico SDK'sından dönen form içeriğinin (iframe/script) yerleştirildiği ana kapsayıcı -->
+            <div id="iyzipay-checkout-form" class="responsive">
+            </div>
+
+        </section>
+
+
+        <!-- --------------------------------------------------------------------- -->
+        <!-- SAĞ PANEL: SİPARİŞ FİYAT ÖZETİ VE ADIM KONTROL BUTONU -->
+        <!-- --------------------------------------------------------------------- -->
+        <!-- SİPARİŞ ÖZETİ -->
+        <section class="cart-summary">
+
+            <h3>
+                Sipariş Özeti
+            </h3>
+
+            <hr style="border:0;border-top:1px solid #eee;margin:15px 0;">
+
+            <div class="summary-row">
+
+                <span>
+                    Ara Toplam
+                </span>
+
+                <span id="summary-subtotal">
+                    0.00 TL
+                </span>
+
+            </div>
+
+            <div class="summary-row">
+
+                <span>
+                    Kargo
+                </span>
+
+                <span id="summary-shipping" style="font-weight:600;">
+                    79.90 TL
+                </span>
+
+            </div>
+
+            <div class="summary-row summary-total">
+
+                <span>
+                    Toplam Tutar
+                </span>
+
+                <span id="summary-total-price">
+                    0.00 TL
+                </span>
+
+            </div>
+
+            <!-- Adım geçişlerini yöneten ana buton: Sepet -> Adres -> Ödeme Formu Açılışı -->
+            <button class="checkout-btn" id="main-checkout-btn" type="button" onclick="handleCheckoutStep()">
+
+                Sepeti Onayla
+
+            </button>
+
+        </section>
+
+    </main>
+
+
+    <!-- Genel site etkileşimlerini barındıran script dosyası -->
+    <!-- ANA SCRIPT -->
+    <script src="script.js"></script>
+
+
+    <!-- ========================================================================= -->
+    <!-- 5. SEPET VE İYZİCO ÖDEME ENTEGRASYON MOTORU -->
+    <!-- ========================================================================= -->
+    <!-- SEPET / ÖDEME SCRIPT -->
+    <script>
+
+        // Mevcut aktif adımı ("cart" | "address" | "payment") ve seçili teslimat adres ID'sini tutan global değişkenler
+        let currentStep = "cart";
+        let selectedAddressId = null;
+
+
+        // =========================================================
+        // AKTİF KULLANICI YÖNETİMİ
+        // =========================================================
+
+        /**
+         * LocalStorage'daki olası anahtarları kontrol edip geçerli kullanıcı objesini döndürür.
+         */
+        function getAktifKullanici() {
+
+            const keys = [
+                "aktifKullanici",
+                "user"
+            ];
+
+            for (const key of keys) {
+
+                const data = localStorage.getItem(key);
+
+                if (!data) continue;
+
+                try {
+
+                    const user = JSON.parse(data);
+
+                    if (user) {
+                        return user;
+                    }
+
+                } catch (e) {
+                    console.warn("Kullanıcı JSON hatası:", e);
+                }
+
+            }
+
+            return null;
+        }
+
+        /**
+         * Kullanıcı ID'sini normalize ederek GUID veya string olarak döndürür.
+         */
+        function getAktifUyeId() {
+
+            const user = getAktifKullanici();
+
+            if (user) {
+
+                return user.uye_id ||
+                    user.id ||
+                    user.Id ||
+                    user.UyeId ||
+                    user.uyeId;
+
+            }
+
+            return localStorage.getItem("uye_id") ||
+                localStorage.getItem("aktif_uye_id");
+
+        }
+
+
+        // =========================================================
+        // ADRESLER
+        // =========================================================
+
+        /**
+         * hesabim.html sayfasıyla ortak kullanılan kullanıcı adres dizisini döner.
+         */
+        function getOrtakAdresler(uyeId) {
+
+            if (!uyeId) return [];
+
+            const key = `kullanici_adresleri_${uyeId}`;
+
+            try {
+
+                const data = localStorage.getItem(key);
+
+                if (!data) return [];
+
+                const addresses = JSON.parse(data);
+
+                return Array.isArray(addresses)
+                    ? addresses
+                    : [];
+
+            } catch (e) {
+
+                console.error("Adres okuma hatası:", e);
+
+                return [];
+
+            }
+
+        }
+
+
+        // =========================================================
+        // SEPET ERİŞİMİ
+        // =========================================================
+
+        /**
+         * LocalStorage'daki kullanıcıya özel veya genel sepet anahtarlarını tarayarak sepeti bulur.
+         */
+        function getSepetUrunleri(aktifUyeId) {
+
+            const keys = [];
+
+            if (aktifUyeId) {
+                keys.push(`sepet_${aktifUyeId}`);
+            }
+
+            keys.push(
+                "sepet",
+                "cart",
+                "sepetim",
+                "basket"
+            );
+
+
+            for (const key of keys) {
+
+                const data = localStorage.getItem(key);
+
+                if (!data) continue;
+
+                try {
+
+                    const items = JSON.parse(data);
+
+                    if (Array.isArray(items)) {
+
+                        return {
+                            key: key,
+                            items: items
+                        };
+
+                    }
+
+                } catch (e) {
+
+                    console.warn(
+                        "Sepet JSON okunamadı:",
+                        key,
+                        e
+                    );
+
+                }
+
+            }
+
+
+            // Son çare sepet_ ile başlayan anahtarları ara
+            for (let i = 0; i < localStorage.length; i++) {
+
+                const key = localStorage.key(i);
+
+                if (!key) continue;
+
+                if (
+                    key.startsWith("sepet_") ||
+                    key.startsWith("cart_")
+                ) {
+
+                    try {
+
+                        const data =
+                            localStorage.getItem(key);
+
+                        const items =
+                            JSON.parse(data);
+
+                        if (Array.isArray(items)) {
+
+                            return {
+                                key: key,
+                                items: items
+                            };
+
+                        }
+
+                    } catch (e) { }
+
+                }
+
+            }
+
+
+            return {
+                key: null,
+                items: []
+            };
+
+        }
+
+
+        // =========================================================
+        // FİYAT PARSE (BİNLİK AYRACI VE ONDALIK KONTROLÜ)
+        // =========================================================
+        // =========================================================
+        // GÜNCELLENMİŞ FİYAT PARSE (1.80 ve 1.800 Sorununu Kökten Çözer)
+        // =========================================================
+        /**
+         * Türk Lirası fiyat dizgilerini ("1.800 TL", "1.800,50 TL" vb.) hatasız float sayıya çevirir.
+         * Binlik ayracı olan noktayı ondalık basamak ile karıştırmaz.
+         */
+        function fiyatParse(deger) {
+            if (deger === null || deger === undefined || deger === "") return 0;
+
+            let fiyatStr = String(deger).trim().replace(/\s/g, "").replace(/TL/gi, "");
+
+            // Eğer veri "1.800" veya "18.500" gibi gelmişse:
+            if (fiyatStr.includes(".") && !fiyatStr.includes(",")) {
+                const parts = fiyatStr.split(".");
+                // Noktadan sonra 3 basamak varsa bu binliktir (Örn: 1.800 -> 1800)
+                if (parts[parts.length - 1].length === 3) {
+                    fiyatStr = fiyatStr.replace(/\./g, "");
+                }
+            }
+            // Hem nokta hem virgül varsa (Örn: 1.800,50 -> 1800.50)
+            else if (fiyatStr.includes(".") && fiyatStr.includes(",")) {
+                fiyatStr = fiyatStr.replace(/\./g, "").replace(",", ".");
+            }
+            // Sadece virgül varsa (Örn: 1800,50 -> 1800.50)
+            else if (fiyatStr.includes(",")) {
+                fiyatStr = fiyatStr.replace(",", ".");
+            }
+
+            fiyatStr = fiyatStr.replace(/[^0-9.-]/g, "");
+            let sonuc = parseFloat(fiyatStr) || 0;
+
+            // EĞER SQL/JS veriyi önceden 1.8 olarak float yaptıysa (1800 yerine 1.8 geldiyse):
+            // E-ticaret sitende 1.80 TL'ye ürün olmayacağı için 10'dan küçük ondalıkları 1000'le düzeltiyoruz:
+            if (sonuc > 0 && sonuc < 10 && String(deger).includes(".")) {
+                // Eğer 1.800 girilmiş ve JS bunu 1.8 yaptıysa tekrar 1800 yap
+                sonuc = Math.round(sonuc * 1000);
+            }
+
+            return Number.isFinite(sonuc) ? sonuc : 0;
+        }
+
+        // =========================================================
+        // ÜRÜN FİYATI ALMA (İNDİRİMLİ FİYAT ÖNCELİKLİ)
+        // =========================================================
+
+        /**
+         * Ürünün indirimli fiyatı tanımlıysa onu, yoksa normal satış fiyatını çeker.
+         */
+        function urunFiyati(item) {
+
+            if (!item) return 0;
+
+
+            // İndirimli fiyat varsa onu kullan
+            const indirimli =
+                item.indirimlifiyat ??
+                item.indirimliFiyat ??
+                item.indirimli_fiyat;
+
+
+            if (
+                indirimli !== null &&
+                indirimli !== undefined &&
+                String(indirimli).trim() !== ""
+            ) {
+
+                const indirimliFiyat =
+                    fiyatParse(indirimli);
+
+                if (indirimliFiyat > 0) {
+                    return indirimliFiyat;
+                }
+
+            }
+
+
+            return fiyatParse(
+                item.fiyat ??
+                item.price ??
+                item.fiyati ??
+                0
+            );
+
+        }
+
+
+        // =========================================================
+        // KAYITLI ADRESLERİ LİSTELEME
+        // =========================================================
+
+        /**
+         * Kullanıcının adreslerini DOM'a radio buton etiketi olarak basar.
+         */
+        function loadCheckoutAddresses(uyeId) {
+
+            const container =
+                document.getElementById(
+                    "checkout-address-list"
+                );
+
+            if (!container) return;
+
+            container.innerHTML = "";
+
+            selectedAddressId = null;
+
+
+            const addresses =
+                getOrtakAdresler(uyeId);
+
+
+            if (addresses.length === 0) {
+
+                container.innerHTML = `
+                    <p style="
+                        color:#94a3b8;
+                        font-size:0.9rem;
+                    ">
+                        Kayıtlı adresiniz bulunamadı.
+                        Aşağıdan yeni adres ekleyebilirsiniz.
+                    </p>
+                `;
+
+                return;
+
+            }
+
+
+            addresses.forEach((addr, index) => {
+
+                const label =
+                    document.createElement("label");
+
+
+                label.style.cssText = `
+                    display:flex;
+                    align-items:flex-start;
+                    gap:10px;
+                    padding:12px;
+                    border:1px solid #cbd5e1;
+                    border-radius:8px;
+                    cursor:pointer;
+                    background:#fff;
+                `;
+
+
+                const addressId =
+                    addr.id ||
+                    `address_${index}`;
+
+
+                // İlk adresi varsayılan seçili yap
+                if (index === 0) {
+                    selectedAddressId = addressId;
+                }
+
+
+                const radio =
+                    document.createElement("input");
+
+                radio.type = "radio";
+                radio.name = "selected_address";
+                radio.value = addressId;
+                radio.checked = index === 0;
+                radio.style.marginTop = "4px";
+
+
+                radio.addEventListener(
+                    "change",
+                    function () {
+
+                        selectedAddressId =
+                            this.value;
+
+                    }
+                );
+
+
+                const content =
+                    document.createElement("div");
+
+
+                const strong =
+                    document.createElement("strong");
+
+                strong.style.cssText = `
+                    color:#0f172a;
+                    display:block;
+                `;
+
+                strong.textContent =
+                    "🏠 " +
+                    (addr.baslik || "Adres");
+
+
+                const span =
+                    document.createElement("span");
+
+                span.style.cssText = `
+                    color:#64748b;
+                    font-size:0.88rem;
+                `;
+
+                span.textContent =
+                    addr.acik || "";
+
+
+                content.appendChild(strong);
+                content.appendChild(span);
+
+                label.appendChild(radio);
+                label.appendChild(content);
+
+                container.appendChild(label);
+
+            });
+
+        }
+
+
+        // =========================================================
+        // SEÇİLEN ADRES NESNESİNİ ALMA
+        // =========================================================
+
+        function getSecilenAdres(uyeId) {
+
+            const addresses =
+                getOrtakAdresler(uyeId);
+
+            const adres =
+                addresses.find(
+                    a =>
+                        String(a.id) ===
+                        String(selectedAddressId)
+                );
+
+
+            if (!adres) return null;
+
+
+            return {
+                id: adres.id,
+                baslik: adres.baslik || "Adres",
+                acik: adres.acik || ""
+            };
+
+        }
+
+
+        // =========================================================
+        // SEPET ARA TOPLAMINI HESAPLAMA
+        // =========================================================
+
+        function getSepetToplami(items) {
+
+            let toplam = 0;
+
+
+            items.forEach(item => {
+
+                const fiyat =
+                    urunFiyati(item);
+
+                const adet =
+                    parseInt(item.adet) || 1;
+
+
+                toplam +=
+                    fiyat * adet;
+
+            });
+
+
+            return toplam;
+
+        }
+
+
+        // =========================================================
+        // KARGO DURUMU VE PROGRESS BAR GÜNCELLEME
+        // =========================================================
+
+        function kargoDurumunuGuncelle(araToplam) {
+
+            const messageEl =
+                document.getElementById(
+                    "shipping-message"
+                );
+
+            const fillEl =
+                document.getElementById(
+                    "shipping-fill"
+                );
+
+            const step2 =
+                document.getElementById(
+                    "step-point-2"
+                );
+
+            const step3 =
+                document.getElementById(
+                    "step-point-3"
+                );
+
+
+            let kargoUcreti = 0;
+            let progress = 0;
+
+
+            // 1000 TL ve üzeri -> Kargo Bedava
+            if (araToplam >= 1000) {
+
+                kargoUcreti = 0;
+
+                progress = 100;
+
+
+                if (messageEl) {
+
+                    messageEl.innerHTML =
+                        `<strong>1.000 TL</strong> alışveriş tutarına ulaştınız, <span class="highlight">kargonuz ücretsiz!</span> 🎉`;
+
+                }
+
+
+                step2?.classList.add("active");
+                step3?.classList.add("active");
+
+            }
+
+
+            // 500 - 999 TL arası -> 29.90 TL Kargo
+            else if (araToplam >= 500) {
+
+                kargoUcreti = 29.90;
+
+                const kalan =
+                    (1000 - araToplam)
+                        .toFixed(2);
+
+                progress =
+                    50 +
+                    ((araToplam - 500) / 500) *
+                    50;
+
+
+                if (messageEl) {
+
+                    messageEl.innerHTML =
+                        `Kargonun <strong>bedava</strong> olmasına son <strong class="highlight">${kalan} TL!</strong>`;
+
+                }
+
+
+                step2?.classList.add("active");
+                step3?.classList.remove("active");
+
+            }
+
+
+            // 0 - 499 TL arası -> 79.90 TL Kargo
+            else {
+
+                kargoUcreti = 79.90;
+
+                const kalan =
+                    (500 - araToplam)
+                        .toFixed(2);
+
+                progress =
+                    (araToplam / 500) *
+                    50;
+
+
+                if (messageEl) {
+
+                    messageEl.innerHTML =
+                        `Kargonun <strong>29,90 TL</strong> olmasına son <strong class="highlight">${kalan} TL!</strong>`;
+
+                }
+
+
+                step2?.classList.remove("active");
+                step3?.classList.remove("active");
+
+            }
+
+
+            if (fillEl) {
+
+                fillEl.style.width =
+                    `${Math.min(
+                        Math.max(progress, 0),
+                        100
+                    )}%`;
+
+            }
+
+
+            return kargoUcreti;
+
+        }
+
+
+        // =========================================================
+        // SİPARİŞ ÖZETİ TABLOSUNU GÜNCELLEME
+        // =========================================================
+
+        function siparisOzetiniGuncelle(items) {
+
+            const subtotal =
+                getSepetToplami(items);
+
+
+            const shipping =
+                kargoDurumunuGuncelle(
+                    subtotal
+                );
+
+
+            const total =
+                subtotal + shipping;
+
+
+            const subtotalEl =
+                document.getElementById(
+                    "summary-subtotal"
+                );
+
+            const shippingEl =
+                document.getElementById(
+                    "summary-shipping"
+                );
+
+            const totalEl =
+                document.getElementById(
+                    "summary-total-price"
+                );
+
+
+            if (subtotalEl) {
+
+                subtotalEl.textContent =
+                    subtotal.toFixed(2) +
+                    " TL";
+
+            }
+
+
+            if (shippingEl) {
+
+                shippingEl.textContent =
+                    shipping.toFixed(2) +
+                    " TL";
+
+            }
+
+
+            if (totalEl) {
+
+                totalEl.textContent =
+                    total.toFixed(2) +
+                    " TL";
+
+            }
+
+        }
+
+
+        // =========================================================
+        // ADIM YÖNETİMİ: SEPET -> ADRES -> İYZİCO ÖDEME
+        // =========================================================
+
+        async function handleCheckoutStep() {
+
+
+            // Eski script.js click dinleyicilerini ezmek için butonu klonlayıp temizliyoruz:
+            const oldBtn = document.getElementById("main-checkout-btn");
+            if (oldBtn) {
+                const newBtn = oldBtn.cloneNode(true);
+                oldBtn.parentNode.replaceChild(newBtn, oldBtn);
+                newBtn.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleCheckoutStep();
+                });
+            }
+
+            const uyeId =
+                getAktifUyeId();
+
+
+            // Giriş yapılmamışsa login sayfasına yönlendir
+            if (!uyeId) {
+
+                alert(
+                    "Lütfen önce üye girişi yapın!"
+                );
+
+                window.location.href =
+                    "uye.html";
+
+                return;
+
+            }
+
+
+            const sepetSonuc =
+                getSepetUrunleri(uyeId);
+
+            const sepet =
+                sepetSonuc.items;
+
+
+            // -----------------------------------------------------
+            // 1. ADIM: SEPETTEN ADRES SEÇİMİNE GEÇİŞ
+            // -----------------------------------------------------
+
+            if (currentStep === "cart") {
+
+                if (
+                    !Array.isArray(sepet) ||
+                    sepet.length === 0
+                ) {
+
+                    alert(
+                        "Sepetinizde ürün bulunmuyor!"
+                    );
+
+                    return;
+
+                }
+
+
+                siparisOzetiniGuncelle(
+                    sepet
+                );
+
+
+                document.getElementById(
+                    "cart-section"
+                ).style.display = "none";
+
+
+                document.getElementById(
+                    "address-section"
+                ).style.display = "block";
+
+
+                document.getElementById(
+                    "main-checkout-btn"
+                ).textContent =
+                    "Ödemeye Geç";
+
+
+                currentStep = "address";
+
+
+                loadCheckoutAddresses(
+                    uyeId
+                );
+
+
+                return;
+
+            }
+
+
+            // -----------------------------------------------------
+            // 2. ADIM: ADRESTEN İYZİCO ÖDEME FORMUNA GEÇİŞ
+            // -----------------------------------------------------
+
+            if (currentStep === "address") {
+
+                if (!selectedAddressId) {
+
+                    alert(
+                        "Lütfen teslimat için bir adres seçin!"
+                    );
+
+                    return;
+
+                }
+
+
+                const adres =
+                    getSecilenAdres(uyeId);
+
+
+                if (!adres) {
+
+                    alert(
+                        "Seçilen adres bulunamadı!"
+                    );
+
+                    return;
+
+                }
+
+
+                if (
+                    !Array.isArray(sepet) ||
+                    sepet.length === 0
+                ) {
+
+                    alert(
+                        "Sepetiniz boş!"
+                    );
+
+                    return;
+
+                }
+
+
+                // TOPLAM VE KARGO HESAPLAMA
+                const araToplam =
+                    getSepetToplami(sepet);
+
+                const kargo =
+                    kargoDurumunuGuncelle(
+                        araToplam
+                    );
+
+                const toplam =
+                    araToplam + kargo;
+
+
+                // -------------------------------------------------
+                // İYZİCO BASKETITEM DİZİSİNİ OLUŞTURMA
+                // -------------------------------------------------
+
+                const items = sepet.map((item, index) => {
+                    const adet = parseInt(item.adet) || 1;
+                    const birimFiyat = urunFiyati(item);
+                    const toplamUrunFiyati = birimFiyat * adet;
+
+                    return {
+                        id: String(item.id || item.urun_id || (index + 1)),
+                        name: item.ad || item.name || item.urun_adi || "Ürün",
+                        price: Number(toplamUrunFiyati.toFixed(2)),
+                        category: item.kategori || "Genel"
+                    };
+                });
+
+
+                // -------------------------------------------------
+                // BACKEND'E GÖNDERİLECEK ÖDEME PAYLOAD'I
+                // -------------------------------------------------
+
+                const paymentPayload = {
+                    totalPrice: Number(toplam.toFixed(2)),
+                    items: items,
+                    uye_id: String(uyeId),
+                    adres: `${adres.baslik}: ${adres.acik}`,
+                    urunler: JSON.stringify(sepet)
+                };
+
+
+                console.log(
+                    "ÖDEME PAYLOAD:",
+                    paymentPayload
+                );
+
+
+                const btn =
+                    document.getElementById(
+                        "main-checkout-btn"
+                    );
+
+
+                btn.disabled = true;
+
+                btn.textContent =
+                    "Ödeme Formu Açılıyor...";
+
+
+                try {
+
+                    // Backend'deki /api/payment/start endpoint'ine istek atıyoruz
+                    const response =
+                        await fetch(
+                            "http://localhost:5192/api/payment/start",
+                            {
+                                method: "POST",
+
+                                headers: {
+                                    "Content-Type":
+                                        "application/json"
+                                },
+
+                                body:
+                                    JSON.stringify(
+                                        paymentPayload
+                                    )
+                            }
+                        );
+
+
+                    // HTTP durum kodu kontrolü
+                    if (!response.ok) {
+
+                        const errorText =
+                            await response.text();
+
+                        console.error(
+                            "Backend HTTP Hatası:",
+                            response.status,
+                            errorText
+                        );
+
+                        throw new Error(
+                            "Sunucu hatası: " +
+                            response.status
+                        );
+
+                    }
+
+
+                    const result =
+                        await response.json();
+
+
+                    console.log(
+                        "ÖDEME CEVABI:",
+                        result
+                    );
+
+
+                    if (
+                        result.status ===
+                        "success"
+                    ) {
+
+                        // -----------------------------------------
+                        // ADRES VE SİPARİŞİ SESSION'DA SAKLA
+                        // -----------------------------------------
+
+                        sessionStorage.setItem(
+                            "odemeAdres",
+                            JSON.stringify(
+                                adres
+                            )
+                        );
+
+
+                        sessionStorage.setItem(
+                            "odemeUyeId",
+                            String(uyeId)
+                        );
+
+
+                        sessionStorage.setItem(
+                            "odemeToplam",
+                            String(toplam)
+                        );
+
+
+                        // -----------------------------------------
+                        // EKRANI ÖDEME FORMUNA GEÇİR
+                        // -----------------------------------------
+
+                        document.getElementById(
+                            "address-section"
+                        ).style.display = "none";
+
+
+                        document.getElementById(
+                            "payment-section"
+                        ).style.display = "block";
+
+
+                        btn.style.display =
+                            "none";
+
+
+                        currentStep =
+                            "payment";
+
+
+                        // -----------------------------------------
+                        // İYZİCO FORMU EKRANI & SEPET TEMİZLİĞİ
+                        // -----------------------------------------
+
+                        // Ödeme formu açıldığında sepeti temizle
+                        Object.keys(localStorage).forEach(k => {
+                            if (k.startsWith('sepet') || k.startsWith('cart')) {
+                                localStorage.removeItem(k);
+                            }
+                        });
+
+                        const container =
+                            document.getElementById(
+                                "iyzipay-checkout-form"
+                            );
+
+
+                        container.innerHTML = "";
+
+
+                        if (
+                            !result.checkoutFormContent
+                        ) {
+
+                            throw new Error(
+                                "iyzico ödeme formu boş döndü."
+                            );
+
+                        }
+
+
+                        // iyzico'nun döndürdüğü HTML kodunu geçici bir div'e alıyoruz
+                        const temp =
+                            document.createElement(
+                                "div"
+                            );
+
+                        temp.innerHTML =
+                            result.checkoutFormContent;
+
+
+                        // Script dışındaki HTML düğümlerini forma ekle
+                        Array.from(
+                            temp.childNodes
+                        ).forEach(
+                            node => {
+
+                                if (
+                                    node.tagName !==
+                                    "SCRIPT"
+                                ) {
+
+                                    container.appendChild(
+                                        node.cloneNode(
+                                            true
+                                        )
+                                    );
+
+                                }
+
+                            }
+                        );
+
+
+                        // iyzico script tag'lerini DOM'a ayrı birer script elementi olarak ekleyip çalıştırıyoruz
+                        const scripts =
+                            temp.querySelectorAll(
+                                "script"
+                            );
+
+
+                        scripts.forEach(
+                            oldScript => {
+
+                                const newScript =
+                                    document.createElement(
+                                        "script"
+                                    );
+
+
+                                Array.from(
+                                    oldScript.attributes
+                                ).forEach(
+                                    attr => {
+
+                                        newScript.setAttribute(
+                                            attr.name,
+                                            attr.value
+                                        );
+
+                                    }
+                                );
+
+
+                                if (
+                                    oldScript.src
+                                ) {
+
+                                    newScript.src =
+                                        oldScript.src;
+
+                                }
+                                else {
+
+                                    newScript.textContent =
+                                        oldScript.textContent;
+
+                                }
+
+
+                                document.body.appendChild(
+                                    newScript
+                                );
+
+                            }
+                        );
+
+
+                    }
+
+                    else {
+
+                        alert(
+                            "Ödeme formu başlatılamadı:\n" +
+                            (
+                                result.message ||
+                                "Bilinmeyen hata"
+                            )
+                        );
+
+
+                        btn.disabled =
+                            false;
+
+                        btn.textContent =
+                            "Ödemeye Geç";
+
+                    }
+
+                }
+                catch (error) {
+
+                    console.error(
+                        "ÖDEME BAŞLATMA HATASI:",
+                        error
+                    );
+
+
+                    alert(
+                        "Ödeme sunucusuna bağlanılamadı!\n\n" +
+                        error.message
+                    );
+
+
+                    btn.disabled =
+                        false;
+
+                    btn.textContent =
+                        "Ödemeye Geç";
+
+                }
+
+            }
+
+        }
+
+
+        // =========================================================
+        // SEPETE GERİ DÖN BUTONU
+        // =========================================================
+
+        document
+            .getElementById(
+                "btn-back-to-cart"
+            )
+            ?.addEventListener(
+                "click",
+                function () {
+
+                    document.getElementById(
+                        "address-section"
+                    ).style.display =
+                        "none";
+
+
+                    document.getElementById(
+                        "payment-section"
+                    ).style.display =
+                        "none";
+
+
+                    document.getElementById(
+                        "cart-section"
+                    ).style.display =
+                        "block";
+
+
+                    const btn =
+                        document.getElementById(
+                            "main-checkout-btn"
+                        );
+
+
+                    btn.style.display =
+                        "block";
+
+                    btn.disabled =
+                        false;
+
+                    btn.textContent =
+                        "Sepeti Onayla";
+
+
+                    currentStep =
+                        "cart";
+
+                }
+            );
+
+
+        // =========================================================
+        // ADRESE GERİ DÖN BUTONU
+        // =========================================================
+
+        document
+            .getElementById(
+                "btn-back-to-address"
+            )
+            ?.addEventListener(
+                "click",
+                function () {
+
+                    document.getElementById(
+                        "payment-section"
+                    ).style.display =
+                        "none";
+
+
+                    document.getElementById(
+                        "address-section"
+                    ).style.display =
+                        "block";
+
+
+                    const btn =
+                        document.getElementById(
+                            "main-checkout-btn"
+                        );
+
+
+                    btn.style.display =
+                        "block";
+
+                    btn.disabled =
+                        false;
+
+                    btn.textContent =
+                        "Ödemeye Geç";
+
+
+                    currentStep =
+                        "address";
+
+                }
+            );
+
+
+        // =========================================================
+        // SAYFA İÇİNDEN YENİ ADRES EKLEME
+        // =========================================================
+
+        document
+            .getElementById(
+                "btn-save-inline-address"
+            )
+            ?.addEventListener(
+                "click",
+                function () {
+
+                    const uyeId =
+                        getAktifUyeId();
+
+
+                    if (!uyeId) {
+
+                        alert(
+                            "Lütfen önce giriş yapınız!"
+                        );
+
+                        return;
+
+                    }
+
+
+                    const titleInput =
+                        document.getElementById(
+                            "inline-addr-title"
+                        );
+
+                    const textInput =
+                        document.getElementById(
+                            "inline-addr-text"
+                        );
+
+
+                    const baslik =
+                        titleInput.value.trim();
+
+                    const acik =
+                        textInput.value.trim();
+
+
+                    if (!baslik || !acik) {
+
+                        alert(
+                            "Lütfen adres başlığı ve açık adres alanlarını doldurun."
+                        );
+
+                        return;
+
+                    }
+
+
+                    const key =
+                        `kullanici_adresleri_${uyeId}`;
+
+
+                    let addresses =
+                        getOrtakAdresler(
+                            uyeId
+                        );
+
+
+                    const newAddr = {
+
+                        id:
+                            "addr_" +
+                            Date.now(),
+
+                        baslik:
+                            baslik,
+
+                        acik:
+                            acik
+
+                    };
+
+
+                    addresses.push(
+                        newAddr
+                    );
+
+
+                    localStorage.setItem(
+                        key,
+                        JSON.stringify(
+                            addresses
+                        )
+                    );
+
+
+                    titleInput.value =
+                        "";
+
+                    textInput.value =
+                        "";
+
+
+                    loadCheckoutAddresses(
+                        uyeId
+                    );
+
+
+                    selectedAddressId =
+                        newAddr.id;
+
+
+                    // Yeni adresi otomatik olarak seçili işaretle
+                    setTimeout(
+                        () => {
+
+                            const radio =
+                                document.querySelector(
+                                    `input[name="selected_address"][value="${CSS.escape(newAddr.id)}"]`
+                                );
+
+                            if (radio) {
+                                radio.checked =
+                                    true;
+                            }
+
+                        },
+                        50
+                    );
+
+
+                    alert(
+                        "Yeni adres kaydedildi ve seçildi."
+                    );
+
+                }
+            );
+
+
+        // =========================================================
+        // SAYFA YÜKLENDİĞİNDE OTURUM VE SEPETİ HAZIRLAMA
+        // =========================================================
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                const user =
+                    getAktifKullanici();
+
+
+                // Kullanıcı oturumu açıksa header bilgilerini güncelle
+                if (user) {
+
+                    const ad =
+                        user.uye_ad ||
+                        user.ad ||
+                        "";
+
+
+                    const soyad =
+                        user.uye_soyad ||
+                        user.soyad ||
+                        "";
+
+
+                    const tamAd =
+                        `${ad} ${soyad}`
+                            .trim();
+
+
+                    const basHarfler =
+                        `${ad.charAt(0)}${soyad.charAt(0)}`
+                            .toUpperCase() ||
+                        "U";
+
+
+                    const userFullname =
+                        document.getElementById(
+                            "user-fullname"
+                        );
+
+
+                    const userAvatar =
+                        document.getElementById(
+                            "user-avatar-badge"
+                        );
+
+
+                    const menuFullname =
+                        document.getElementById(
+                            "menu-fullname"
+                        );
+
+
+                    const menuAvatar =
+                        document.getElementById(
+                            "menu-avatar-badge"
+                        );
+
+
+                    if (userFullname) {
+                        userFullname.textContent =
+                            tamAd;
+                    }
+
+
+                    if (userAvatar) {
+                        userAvatar.textContent =
+                            basHarfler;
+                    }
+
+
+                    if (menuFullname) {
+                        menuFullname.textContent =
+                            tamAd;
+                    }
+
+
+                    if (menuAvatar) {
+                        menuAvatar.textContent =
+                            basHarfler;
+                    }
+
+
+                    document
+                        .getElementById(
+                            "nav-login-btn"
+                        )
+                        ?.classList.add(
+                            "d-none"
+                        );
+
+
+                    document
+                        .getElementById(
+                            "user-menu"
+                        )
+                        ?.classList.remove(
+                            "d-none"
+                        );
+
+                }
+
+
+                // Çıkış yapma fonksiyonu
+                const cikisYap =
+                    function (e) {
+
+                        e.preventDefault();
+
+                        localStorage.removeItem(
+                            "aktifKullanici"
+                        );
+
+                        window.location.href =
+                            "index.html";
+
+                    };
+
+
+                document
+                    .getElementById(
+                        "profile-logout-btn"
+                    )
+                    ?.addEventListener(
+                        "click",
+                        cikisYap
+                    );
+
+
+                document
+                    .getElementById(
+                        "logout-btn"
+                    )
+                    ?.addEventListener(
+                        "click",
+                        cikisYap
+                    );
+
+
+                // script.js içerisindeki genel kullanıcı kontrolünü çağır
+                if (
+                    typeof window.kullaniciDurumunuKontrolEt ===
+                    "function"
+                ) {
+
+                    window.kullaniciDurumunuKontrolEt();
+
+                }
+
+
+                // script.js içerisindeki sepet listeleme fonksiyonunu çağır
+                if (
+                    typeof window.sepetiYukle ===
+                    "function"
+                ) {
+
+                    window.sepetiYukle();
+
+                }
+
+
+                // İlk sepet özeti ve kargo durumunu hesapla
+                setTimeout(
+                    function () {
+
+                        const uyeId =
+                            getAktifUyeId();
+
+                        const sonuc =
+                            getSepetUrunleri(
+                                uyeId
+                            );
+
+                        siparisOzetiniGuncelle(
+                            sonuc.items
+                        );
+
+                    },
+                    100
+                );
+
+            }
+        );
+
+
+        // =========================================================
+        // ÜRÜN ADEDİ DEĞİŞTİRME (+ / -) VE SEPETTEN SİLME
+        // =========================================================
+
+        function adetDegistir(
+            index,
+            degisim
+        ) {
+
+            const uyeId =
+                getAktifUyeId();
+
+
+            let sepetKey =
+                uyeId
+                    ? `sepet_${uyeId}`
+                    : "sepet";
+
+
+            if (
+                !localStorage.getItem(
+                    sepetKey
+                ) &&
+                localStorage.getItem(
+                    "sepet"
+                )
+            ) {
+
+                sepetKey =
+                    "sepet";
+
+            }
+
+
+            let sepet = [];
+
+            try {
+
+                sepet =
+                    JSON.parse(
+                        localStorage.getItem(
+                            sepetKey
+                        ) || "[]"
+                    );
+
+            }
+            catch (e) {
+
+                console.error(
+                    "Sepet okunamadı:",
+                    e
+                );
+
+                return;
+
+            }
+
+
+            if (!sepet[index]) return;
+
+
+            let adet =
+                parseInt(
+                    sepet[index].adet
+                ) || 1;
+
+
+            adet += degisim;
+
+
+            // Adet 0 ve altına düşerse ürünü diziden çıkar
+            if (adet <= 0) {
+
+                sepet.splice(
+                    index,
+                    1
+                );
+
+            }
+            else {
+
+                sepet[index].adet =
+                    adet;
+
+            }
+
+
+            // Güncel sepeti localStorage'a yaz
+            localStorage.setItem(
+                sepetKey,
+                JSON.stringify(
+                    sepet
+                )
+            );
+
+
+            // Arayüzü güncelle
+            if (
+                typeof window.sepetiYukle ===
+                "function"
+            ) {
+
+                window.sepetiYukle();
+
+            }
+
+
+            // Fiyat özetlerini yeniden hesapla
+            setTimeout(
+                function () {
+
+                    const sonuc =
+                        getSepetUrunleri(
+                            uyeId
+                        );
+
+                    siparisOzetiniGuncelle(
+                        sonuc.items
+                    );
+
+                },
+                50
+            );
+
+        }
+
+    </script>
+
+</body>
+
+</html>

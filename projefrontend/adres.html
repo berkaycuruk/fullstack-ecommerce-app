@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <!-- Karakter kodlaması ve mobil cihazlar için duyarlı tasarım (responsive) meta etiketleri -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adreslerim</title>
+    <!-- Projenin genel CSS stil dosyası -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ========================================================================= -->
+    <!-- 1. ÜST PROMOSYON BANNER ALANI -->
+    <!-- ========================================================================= -->
+    <header>
+        <img class="header-img"
+            src="https://i.dr.com.tr/pimages/Content/Uploads/BannerFiles/dr/2026-TEMMUZ-SERINLETEN-URUNLER-HELLO-BAR1140X60.webp"
+            alt="">
+    </header>
+
+    <!-- ========================================================================= -->
+    <!-- 2. ANA BAŞLIK (LOGO, ARAMA FORMU, İNDİRİMLER VE KULLANICI DROPDOWN MENÜSÜ) -->
+    <!-- ========================================================================= -->
+    <header class="header1">
+        <!-- Site Logosu: Ana sayfaya yönlendirir -->
+        <!-- LOGO -->
+        <div class="logo">
+            <a href="index.html">
+                <img class="logo_img" src="/image/logo.jpg" alt="Logo">
+            </a>
+        </div>
+
+        <!-- Ürün Arama Çubuğu: Backend API'deki /api/genel endpoint'ine GET sorgusu gönderir -->
+        <!-- SEARCH -->
+        <div class="search-box">
+            <form class="search-container" action="http://localhost:5192/api/genel" method="GET" role="search">
+                <div class="search-input-wrapper">
+                    <input type="search" class="search-input" name="kelime"
+                        placeholder="Ürün, kategori veya marka arayın..." maxlength="60" autocomplete="off"
+                        aria-label="Ürün arama" />
+                </div>
+                <button type="submit" class="search-submit-btn">Ara</button>
+            </form>
+        </div>
+
+        <!-- İndirimli Ürünleri Filtreleme Butonu (script.js üzerinden indirimli ürünleri çeker) -->
+        <span><button class="search-discount" type="button" onclick="indirimliUrunleriGetir()">İndirimli
+                Ürünler</button></span>
+
+        <!-- Kullanıcı Aksiyonları: Giriş/Kayıt veya Kullanıcı Profil Dropdown'ı -->
+        <div class="header1-actions">
+
+            <!-- Ziyaretçi Giriş/Kayıt Butonu (Kullanıcı giriş yaptığında script.js tarafından 'd-none' eklenerek gizlenir) -->
+            <a href="uye.html" class="header1-item" id="nav-login-btn">
+                <span class="icon">👤</span>
+                <span>Giriş Yap/Kayıt Ol</span>
+            </a>
+
+            <!-- Aktif Kullanıcı Hesabım Menüsü (Oturum açıkken 'd-none' sınıfı kaldırılarak gösterilir) -->
+            <div class="header1-item user-dropdown d-none" id="user-menu">
+                <div class="user-dropdown-trigger">
+                    <span class="icon">👤</span>
+                    <span>Hesabım</span>
+                </div>
+                <div class="dropdown-content">
+                    <div class="user-info-row">
+                        <!-- Kullanıcı ad-soyad baş harflerinin gösterildiği avatar -->
+                        <div class="user-avatar" id="user-avatar-badge">BÇ</div>
+                        <div class="user-details">
+                            <span class="greeting">Merhaba</span>
+                            <!-- Kullanıcı tam adı script.js tarafından dinamik yazılır -->
+                            <span class="user-fullname" id="user-fullname">Berkay ÇÜRÜK</span>
+                        </div>
+                    </div>
+                    <hr class="dropdown-divider">
+                    <!-- Kullanıcı profil ve üyelik bilgileri sayfası -->
+                    <a href="hesabim.html" class="dropdown-menu-item"
+                        style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; text-decoration: none; color: #334155; font-size: 14px; border-radius: 6px; transition: background-color 0.2s;">
+                        <span>👤</span>
+                        <span>Hesabım</span>
+                    </a>
+
+                    <hr class="dropdown-divider">
+
+                    <!-- Kullanıcının geçmiş siparişler sayfası -->
+                    <a href="siparis.html" class="dropdown-menu-item"
+                        style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; text-decoration: none; color: #334155; font-size: 14px; border-radius: 6px; transition: background-color 0.2s;">
+                        <span>📦</span>
+                        <span>Siparişlerim</span>
+                    </a>
+
+                    <hr class="dropdown-divider">
+                    <!-- Oturumu kapatıp localStorage'ı temizleyen buton -->
+                    <button id="logout-btn" class="logout-link" type="button">Çıkış Yap</button>
+                </div>
+            </div>
+
+            <!-- Favorilerim Kısayolu -->
+            <a href="favoriler.html" class="header1-item">
+                <span class="icon">♡</span>
+                <span>Favoriler</span>
+            </a>
+
+            <!-- Sepetim Kısayolu -->
+            <a href="sepet.html" class="header1-item">
+                <span class="icon">🛒</span>
+                <span>Sepetim</span>
+            </a>
+
+        </div>
+    </header>
+
+    <!-- Kategori Filtre Butonları -->
+    <div class="kategori-div">
+        <span><button class="kategori" type="button"><a href='kitaplar.html'>Kitaplar</a></button></span>
+        <span><button class="kategori" type="button"><a href='elektronik.html'>Elektronik</a></button></span>
+        <span><button class="kategori" type="button"><a href='hobi.html'>Hobi</a></button></span>
+        <span><button class="kategori" type="button"><a href='kirtasiye.html'>Kırtasiye</a></button></span>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- 3. ADRESLER İÇERİK ALANI (LİSTELEME VE YENİ ADRES FORMU) -->
+    <!-- ========================================================================= -->
+    <!-- ADRESLER İÇERİK ALANI -->
+    <div class="addr-page-wrapper">
+        <!-- Kayıtlı Adreslerin Listelendiği Kart -->
+        <!-- Kayıtlı Adresler Kutusu -->
+        <div class="addr-box-card">
+            <h2 class="addr-section-title">Kayıtlı Adreslerim</h2>
+            <!-- JavaScript tarafından kullanıcının kayıtlı adreslerinin basılacağı kapsayıcı div -->
+            <div id="addressContainer" class="addr-items-list">
+                <!-- Adresler JS ile buraya yüklenecek -->
+            </div>
+        </div>
+
+        <!-- Yeni Adres Ekleme Formu Kartı -->
+        <!-- Yeni Adres Ekleme Kutusu -->
+        <div class="addr-box-card">
+            <h2 class="addr-section-title">Yeni Adres Ekle</h2>
+            <form id="addressForm">
+                <div class="addr-input-group">
+                    <label class="addr-label" for="addressTitle">Adres Başlığı (Örn: Ev, İş)</label>
+                    <input type="text" id="addressTitle" class="addr-field" placeholder="Ev Adresim" required>
+                </div>
+
+                <div class="addr-input-group">
+                    <label class="addr-label" for="fullAddress">Açık Adres</label>
+                    <textarea id="fullAddress" class="addr-field" rows="3"
+                        placeholder="Mahalle, Sokak, No, Daire, İlçe/İl..." required></textarea>
+                </div>
+
+                <button type="submit" class="addr-btn-submit">Adresi Kaydet</button>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- Genel site etkileşimlerini barındıran script dosyası -->
+    <script src="script.js"></script>
+
+    <!-- ========================================================================= -->
+    <!-- 4. ADRES YÖNETİMİ JAVASCRIPT MOTORU -->
+    <!-- ========================================================================= -->
+    <script>
+        /**
+         * LocalStorage üzerindeki olası anahtarları tarayarak aktif kullanıcının ID'sini döndürür.
+         * Kullanıcı ID'si doğrudan bulunamazsa, favori veya sepet anahtarlarından ('fav_', 'sepet_') ID çıkartır.
+         */
+        function getAktifUyeId() {
+            const directId = localStorage.getItem("uye_id") ||
+                localStorage.getItem("aktif_uye_id") ||
+                localStorage.getItem("userId");
+            if (directId) return directId;
+
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.startsWith("fav_")) {
+                    return key.replace("fav_", "");
+                }
+                if (key && key.startsWith("sepet_")) {
+                    return key.replace("sepet_", "");
+                }
+            }
+            return null;
+        }
+
+        // Aktif oturum ve DOM elemanlarının referansları
+        const aktifUyeId = getAktifUyeId();
+        const addressForm = document.getElementById("addressForm");
+        const addressContainer = document.getElementById("addressContainer");
+
+        // Kullanıcı giriş yapmamışsa sayfaya erişimi engelle ve üye girişine yönlendir
+        if (!aktifUyeId) {
+            alert("Adreslerinizi görüntülemek için lütfen üye girişi yapın!");
+            window.location.href = "uye.html";
+        }
+
+        // Kullanıcıya özel adres depolama anahtarı öneki (Örn: "uye_GUID_adres")
+        const KEY_PREFIX = `uye_${aktifUyeId}_adres`;
+
+        /**
+         * LocalStorage'da ilgili kullanıcı önekine sahip tüm adres anahtarlarını bulur,
+         * JSON formatından JS nesnesine çevirir ve sıralı dizi olarak döndürür.
+         */
+        function getAddresses() {
+            const addresses = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.startsWith(KEY_PREFIX)) {
+                    try {
+                        const item = JSON.parse(localStorage.getItem(key));
+                        addresses.push(item);
+                    } catch (e) {
+                        console.error("Adres verisi okunamadı:", key);
+                    }
+                }
+            }
+            return addresses.sort((a, b) => a.key.localeCompare(b.key));
+        }
+
+        /**
+         * Kayıtlı adresleri DOM üzerinde listeler.
+         * Adres yoksa bilgilendirme metni basar, varsa başlık, açık adres ve 'Sil' butonu ile listeler.
+         */
+        function renderAddresses() {
+            const addresses = getAddresses();
+            addressContainer.innerHTML = "";
+
+            if (addresses.length === 0) {
+                addressContainer.innerHTML = '<p class="addr-empty-note">Henüz kayıtlı bir adresiniz bulunmuyor.</p>';
+                return;
+            }
+
+            addresses.forEach(addr => {
+                const item = document.createElement("div");
+                item.className = "addr-item-row";
+                item.innerHTML = `
+                    <div>
+                        <h4 class="addr-item-header">${escapeHtml(addr.baslik)}</h4>
+                        <p class="addr-item-text">${escapeHtml(addr.adres)}</p>
+                    </div>
+                    <button class="addr-btn-remove" onclick="deleteAddress('${addr.key}')">Sil</button>
+                `;
+                addressContainer.appendChild(item);
+            });
+        }
+
+        /**
+         * Yeni adres ekleme formunun submit dinleyicisi.
+         * Mevcut anahtarlar arasında çakışma olmaması için artan bir index ile yeni key üretir ve localStorage'a yazar.
+         */
+        addressForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            if (!aktifUyeId) {
+                alert("Oturum süreniz dolmuş, lütfen tekrar giriş yapın.");
+                return;
+            }
+
+            const titleInput = document.getElementById("addressTitle");
+            const addressInput = document.getElementById("fullAddress");
+
+            // Kullanılmayan bir sonraki adres anahtarı index'ini bul (Örn: uye_xxx_adres1, uye_xxx_adres2...)
+            let index = 1;
+            while (localStorage.getItem(`${KEY_PREFIX}${index}`) !== null) {
+                index++;
+            }
+
+            const storageKey = `${KEY_PREFIX}${index}`;
+
+            const newAddress = {
+                key: storageKey,
+                uye_id: aktifUyeId,
+                baslik: titleInput.value.trim(),
+                adres: addressInput.value.trim()
+            };
+
+            // Yeni adresi kaydet
+            localStorage.setItem(storageKey, JSON.stringify(newAddress));
+
+            // Form alanlarını sıfırla ve listeyi yeniden çiz
+            titleInput.value = "";
+            addressInput.value = "";
+            renderAddresses();
+        });
+
+        /**
+         * Belirtilen anahtara sahip adresi localStorage'dan siler ve arayüzü günceller.
+         * Global 'window' nesnesine atanarak HTML butonunun 'onclick' olayından doğrudan çağrılabilir.
+         */
+        window.deleteAddress = function (key) {
+            if (key.startsWith(KEY_PREFIX)) {
+                localStorage.removeItem(key);
+                renderAddresses();
+            }
+        };
+
+        /**
+         * XSS (Cross-Site Scripting) açıklarını engellemek için kullanıcı girdilerini HTML entity formatına çevirir.
+         */
+        function escapeHtml(text) {
+            const div = document.createElement("div");
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Sayfa ilk yüklendiğinde mevcut kayıtlı adresleri listele
+        renderAddresses();
+
+        // Sayfa yüklendiğinde script.js içindeki kullanıcı durumunu ve header'ı kontrol et
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof window.kullaniciDurumunuKontrolEt === 'function') {
+                window.kullaniciDurumunuKontrolEt();
+            }
+        });
+    </script>
+
+</body>
+
+</html>

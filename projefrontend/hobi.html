@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <!-- Karakter seti ve mobil responsive ekran yerleşimi ayarları -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ana Sayfa/Hobi</title>
+    <!-- Genel tema ve bileşen stilleri -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ========================================================================= -->
+    <!-- 1. ÜST KAMPANYA VE DUYURU BANNERI -->
+    <!-- ========================================================================= -->
+    <header>
+        <!-- <nav>
+            <a href="#">Ana Sayfa</a>
+        </nav> -->
+        <img class="header-img"
+            src="https://i.dr.com.tr/pimages/Content/Uploads/BannerFiles/dr/2026-TEMMUZ-SERINLETEN-URUNLER-HELLO-BAR1140X60.webp"
+            alt="">
+    </header>
+
+    <!-- ========================================================================= -->
+    <!-- 2. ANA HEADER (LOGO, ARAMA, İNDİRİMLER VE KULLANICI DROPDOWN MENÜSÜ) -->
+    <!-- ========================================================================= -->
+    <header class="header1">
+
+        <!-- Logo alanı: Ana sayfaya yönlendirir -->
+        <!-- LOGO -->
+        <div class="logo">
+            <a href="index.html">
+                <img class="logo_img" src="/image/logo.jpg" alt="Logo">
+            </a>
+        </div>
+
+        <!-- Ürün Arama Çubuğu: Backend /api/genel endpoint'ine GET isteği atar -->
+        <!-- SEARCH -->
+        <div class="search-box">
+            <form class="search-container" action="http://localhost:5192/api/genel" method="GET" role="search">
+
+                <div class="search-input-wrapper">
+                    <input type="search" class="search-input" name="kelime"
+                        placeholder="Ürün, kategori veya marka arayın..." maxlength="60" autocomplete="off"
+                        aria-label="Ürün arama" />
+                </div>
+
+                <button type="submit" class="search-submit-btn">Ara</button>
+            </form>
+        </div>
+
+        <!-- İndirimli Ürünleri Filtreleyen Buton (script.js üzerinden tetiklenir) -->
+        <span><button class="search-discount" type="button" onclick="indirimliUrunleriGetir()">İndirimli
+                Ürünler</button></span>
+
+        <!-- Kullanıcı Aksiyon Menüsü (Giriş/Kayıt, Profil Dropdown, Favoriler, Sepet) -->
+        <div class="header1-actions">
+
+            <!-- Ziyaretçi Giriş/Kayıt Butonu (Kullanıcı giriş yaptığında 'd-none' eklenir) -->
+            <a href="uye.html" class="header1-item" id="nav-login-btn">
+                <span class="icon">👤</span>
+                <span>Giriş Yap/Kayıt Ol</span>
+            </a>
+
+            <!-- Giriş Yapılmışsa Görünen Profil Menüsü (Oturum açıkken 'd-none' kaldırılır) -->
+            <div class="header1-item user-dropdown d-none" id="user-menu">
+                <div class="user-dropdown-trigger">
+                    <span class="icon">👤</span>
+                    <span>Hesabım</span>
+                </div>
+                <div class="dropdown-content">
+                    <div class="user-info-row">
+                        <!-- Kullanıcı baş harfleri avatarı -->
+                        <div class="user-avatar" id="user-avatar-badge">BÇ</div>
+                        <div class="user-details">
+                            <span class="greeting">Merhaba</span>
+                            <!-- Kullanıcı tam adı dinamik basılır -->
+                            <span class="user-fullname" id="user-fullname">Berkay ÇÜRÜK</span>
+                        </div>
+                    </div>
+                    <hr class="dropdown-divider">
+
+                    <!-- Kullanıcı profil/adres yönetim linki -->
+                    <a href="hesabim.html" class="dropdown-menu-item"
+                        style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; text-decoration: none; color: #334155; font-size: 14px; border-radius: 6px; transition: background-color 0.2s;">
+                        <span>👤</span>
+                        <span>Hesabım</span>
+                    </a>
+
+                    <hr class="dropdown-divider">
+
+                    <!-- Siparişlerim sayfası linki -->
+                    <a href="siparis.html" class="dropdown-menu-item"
+                        style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; text-decoration: none; color: #334155; font-size: 14px; border-radius: 6px; transition: background-color 0.2s;">
+                        <span>📦</span>
+                        <span>Siparişlerim</span>
+                    </a>
+
+                    <hr class="dropdown-divider">
+                    <!-- Oturumu kapatıp localStorage'ı temizleyen buton -->
+                    <button id="logout-btn" class="logout-link" type="button">Çıkış Yap</button>
+                </div>
+            </div>
+
+            <!-- Favorilerim Kısayolu -->
+            <a href="favoriler.html" class="header1-item">
+                <span class="icon">♡</span>
+                <span>Favoriler</span>
+            </a>
+
+            <!-- Sepetim Kısayolu -->
+            <a href="sepet.html" class="header1-item">
+                <span class="icon">🛒</span>
+                <span>Sepetim</span>
+            </a>
+
+        </div>
+    </header>
+
+    <!-- Kategori Menü Butonları -->
+    <div class="kategori-div">
+        <span><button class="kategori" type="button"><a href='kitaplar.html'>Kitaplar</a></button></span>
+        <span><button class="kategori" type="button"><a href='elektronik.html'>Elektronik</a></button></span>
+        <span><button class="kategori" type="button"><a href='hobi.html'>Hobi</a></button></span>
+        <span><button class="kategori" type="button"><a href='kirtasiye.html'>Kırtasiye</a></button></span>
+    </div>
+
+    <!-- Sayfa Navigasyon Breadcrumb Başlığı -->
+    <h5 class="kitaplar-ana-sayfa-kitaplar">Ana Sayfa/Hobi</h5>
+
+    <!-- ========================================================================= -->
+    <!-- 3. HOBİ ALT KATEGORİ SLIDER ALANI (PUZZLE, LEGO, KART OYUNLARI VB.) -->
+    <!-- Tıklanan kartın 'data-kelime' değeri üzerinden script.js aramayı tetikler -->
+    <!-- ========================================================================= -->
+    <div class="kitaplar-section">
+        <span>
+            <h2 class="kitaplar-baslik">Hobi</h2>
+        </span>
+
+        <div class="brand-slider-wrapper">
+
+            <!-- Slider sol kaydırma butonu -->
+            <button class="slider-btn prev-btn" id="slideLeft" aria-label="Sola Kaydır">&#10094;</button>
+
+            <!-- Kaydırılabilir hobi alt kategori kartları pisti -->
+            <div class="brand-slider-track" id="sliderTrack">
+
+                <div class="brand-slide-item">
+                    <a href="#" class="arama-butonu" data-kelime="puzzle" title="Puzzle">
+                        <img src="image/puzzle.jpg" alt="Puzzle">
+                    </a>
+                    <strong><span class="brand-slide-title">Puzzle</span></strong>
+                </div>
+
+                <div class="brand-slide-item">
+                    <a href="#" class="arama-butonu" data-kelime="yapboz" title="Yapboz">
+                        <img src="image/yapboz.jpg" alt="Yapboz">
+                    </a>
+                    <strong><span class="brand-slide-title">Yapboz</span></strong>
+                </div>
+
+                <div class="brand-slide-item">
+                    <a href="#" class="arama-butonu" data-kelime="lego" title="Lego">
+                        <img src="image/lego.jpg" alt="Lego">
+                    </a>
+                    <strong><span class="brand-slide-title">Lego</span></strong>
+                </div>
+
+                <div class="brand-slide-item">
+                    <a href="#" class="arama-butonu" data-kelime="kart oyunu" title="Kart Oyunları">
+                        <img src="image/kartoyunu.jpg" alt="Kart Oyunları">
+                    </a>
+                    <strong><span class="brand-slide-title">Kart Oyunları</span></strong>
+                </div>
+
+                <div class="brand-slide-item">
+                    <a href="#" class="arama-butonu" data-kelime="yapıştırıcı" title="Puzzle Yapıştırıcı">
+                        <img src="image/yapıştırıcı.jpg" alt="Puzzle Yapıştırıcı">
+                    </a>
+                    <strong><span class="brand-slide-title">Puzzle Yapıştırıcı</span></strong>
+                </div>
+
+                <div class="brand-slide-item">
+                    <a href="#" class="arama-butonu" data-kelime="figür" title="Figürler">
+                        <img src="image/figür.jpg" alt="Figürler">
+                    </a>
+                    <strong><span class="brand-slide-title">Figürler</span></strong>
+                </div>
+
+                <div class="brand-slide-item">
+                    <a href="#" class="arama-butonu" data-kelime="mythos" title="Mythos">
+                        <img src="image/takımkartları.jpg" alt="Mythos">
+                    </a>
+                    <strong><span class="brand-slide-title">Takım Kartları</span></strong>
+                </div>
+
+                <div class="brand-slide-item">
+                    <a href="#" class="arama-butonu" data-kelime="kutu oyunu" title="Kutu Oyunları">
+                        <img src="image/kutuoyunları.jpg" alt="Kutu Oyunları">
+                    </a>
+                    <strong><span class="brand-slide-title">Kutu Oyunları</span></strong>
+                </div>
+
+            </div>
+
+            <!-- Slider sağ kaydırma butonu -->
+            <button class="slider-btn next-btn" id="slideRight" aria-label="Sağa Kaydır">&#10095;</button>
+        </div>
+    </div>
+
+
+    <!-- ========================================================================= -->
+    <!-- 4. ÜRÜN LİSTELEME VE MARKA FİLTRELEME ALANI -->
+    <!-- ========================================================================= -->
+    <div class="product-section">
+
+        <!-- SOL FİLTRELER: Hobi markaları checkbox filtreleme kolonu -->
+        <!-- SOL FİLTRELER -->
+        <div class="filters-column">
+
+            <!-- YAZAR -->
+            <div class="checkbox-box">
+
+                <h4>Marka seçin...</h4>
+
+                <!-- Checkbox seçildiğinde script.js 'data-marka' özniteliği üzerinden ürünleri filtreler -->
+                <div class="category-list">
+
+                    <div class="check-item">
+                        <input type="checkbox" id="yazar1" data-marka="Anatolian">
+                        <label for="yazar1">Anatolian</label>
+                    </div>
+
+                    <div class="check-item">
+                        <input type="checkbox" id="yazar2" data-marka="Ks Games">
+                        <label for="yazar2">Ks Games</label>
+                    </div>
+
+                    <div class="check-item">
+                        <input type="checkbox" id="yazar3" data-marka="Lego">
+                        <label for="yazar3">Lego</label>
+                    </div>
+
+                    <div class="check-item">
+                        <input type="checkbox" id="yazar4" data-marka="Sonsuz Oyun">
+                        <label for="yazar4">Sonsuz Oyun</label>
+                    </div>
+
+                    <div class="check-item">
+                        <input type="checkbox" id="yazar5" data-marka="Tabak">
+                        <label for="yazar5">Tabak</label>
+                    </div>
+
+                    <div class="check-item">
+                        <input type="checkbox" id="yazar6" data-marka="Minecraft">
+                        <label for="yazar6">Minecraft</label>
+                    </div>
+
+                    <div class="check-item">
+                        <input type="checkbox" id="yazar7" data-marka="Magnetic Tiles">
+                        <label for="yazar7">Magnetic Tiles</label>
+                    </div>
+
+                    <div class="check-item">
+                        <input type="checkbox" id="yazar8" data-marka="Dede">
+                        <label for="yazar8">Dede</label>
+                    </div>
+
+                    <div class="check-item">
+                        <input type="checkbox" id="yazar9" data-marka="Mythos">
+                        <label for="yazar9">Mythos</label>
+                    </div>
+
+                    <div class="check-item">
+                        <input type="checkbox" id="yazar10" data-marka="Sparkle Girlz">
+                        <label for="yazar10">Sparkle Girlz</label>
+                    </div>
+
+                    <div class="check-item">
+                        <input type="checkbox" id="yazar11" data-marka="Star">
+                        <label for="yazar11">Star</label>
+                    </div>
+
+                    <div class="check-item">
+                        <input type="checkbox" id="yazar12" data-marka="Robotime">
+                        <label for="yazar12">Robotime</label>
+                    </div>
+
+                    <div class="check-item">
+                        <input type="checkbox" id="yazar13" data-marka="Mınıx">
+                        <label for="yazar13">Mınıx</label>
+                    </div>
+
+                    <div class="check-item">
+                        <input type="checkbox" id="yazar14" data-marka="Fandrop">
+                        <label for="yazar12">Fandrop</label>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+
+        <!-- SAĞ ÜRÜN LİSTELEME GRID ALANI -->
+        <!-- script.js tarafından çekilen hobi ürün kartları ve sayfalama bu gridlere basılır -->
+        <!-- SAĞ ÜRÜNLER -->
+        <div class="products-area">
+
+            <!-- Hobi kategorisine ait ürünlerin varsayılan olarak basıldığı ana grid -->
+            <div class="products-grid" id="hobi"></div>
+
+            <!-- Arama sonuçlarının basıldığı grid -->
+            <div class="products-grid" id="aramaSonuclari"></div>
+
+            <!-- İndirimli ürünler filtresi sonuçlarının basıldığı grid -->
+            <div class="products-grid" id="indirimliGrid"></div>
+
+            <!-- Sayfalama (Pagination) butonlarının dinamik oluşturulduğu alan -->
+            <div class="pagination" id="pagination">
+            </div>
+
+        </div>
+        <!-- JavaScript buraya 30 ürün ekleyecek -->
+
+    </div>
+
+    </div>
+
+    <!-- Genel site etkileşimleri, API istekleri ve slider mekanizması scripti -->
+    <script src="script.js"></script>
+
+    <script>
+        // Sayfa yüklendiğinde kullanıcı oturumunu kontrol et ve header'ı senkronize et
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof kullaniciDurumunuKontrolEt === 'function') {
+                kullaniciDurumunuKontrolEt();
+            }
+        });
+    </script>
+</body>
+
+</html>

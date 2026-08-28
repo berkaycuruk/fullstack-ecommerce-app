@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <!-- Karakter kodlaması ve mobil cihazlar için responsive ekran tanımı -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Üye Ol/Giriş Yap</title>
+    <!-- Projenin harici CSS stil dosyası bağlantısı -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ========================================================================= -->
+    <!-- 1. ÜST KAMPANYA VE DUYURU BANNERI -->
+    <!-- ========================================================================= -->
+    <header>
+        <!-- <nav>
+            <a href="#">Ana Sayfa</a>
+        </nav> -->
+        <img class="header-img"
+            src="https://i.dr.com.tr/pimages/Content/Uploads/BannerFiles/dr/2026-TEMMUZ-SERINLETEN-URUNLER-HELLO-BAR1140X60.webp"
+            alt="">
+    </header>
+
+    <!-- ========================================================================= -->
+    <!-- 2. ANA HEADER (LOGO, ARAMA FORMU, İNDİRİMLER VE KULLANICI DROPDOWN MENÜSÜ) -->
+    <!-- ========================================================================= -->
+    <header class="header1">
+
+        <!-- Logo alanı: Ana sayfaya yönlendirir -->
+        <div class="logo">
+            <a href="index.html">
+                <img class="logo_img" src="/image/logo.jpg" alt="Logo">
+            </a>
+        </div>
+
+        <!-- Ürün Arama Çubuğu: Backend /api/genel endpoint'ine GET isteği atar -->
+        <div class="search-box">
+            <form class="search-container" action="http://localhost:5192/api/genel" method="GET" role="search">
+
+                <div class="search-input-wrapper">
+                    <input type="search" class="search-input" name="kelime"
+                        placeholder="Ürün, kategori veya marka arayın..." maxlength="60" autocomplete="off"
+                        aria-label="Ürün arama" />
+                </div>
+
+                <button type="submit" class="search-submit-btn">Ara</button>
+            </form>
+        </div>
+
+        <!-- İndirimli ürünleri doğrudan listeleyen tetikleyici buton (script.js üzerinden yönetilir) -->
+        <span><button class="search-discount" type="button" onclick="indirimliUrunleriGetir()">İndirimli
+                Ürünler</button></span>
+
+        <!-- Kullanıcı Durum & Aksiyon Menüsü (Giriş/Kayıt, Profil Dropdown, Favoriler, Sepet) -->
+        <div class="header1-actions">
+
+            <!-- Ziyaretçi Giriş/Kayıt Butonu (Zaten bu sayfada olunduğu için varsayılan aktif haldedir) -->
+            <a href="uye.html" class="header1-item" id="nav-login-btn">
+                <span class="icon">👤</span>
+                <span>Giriş Yap/Kayıt Ol</span>
+            </a>
+
+            <!-- Aktif Kullanıcı Profil Menüsü (Oturum açıkken 'd-none' kaldırılarak gösterilir) -->
+            <div class="header1-item user-dropdown d-none" id="user-menu">
+                <div class="user-dropdown-trigger">
+                    <span class="icon">👤</span>
+                    <span>Hesabım</span>
+                </div>
+                <div class="dropdown-content">
+                    <div class="user-info-row">
+                        <!-- Kullanıcı ad-soyad baş harfleri avatarı -->
+                        <div class="user-avatar" id="user-avatar-badge">BÇ</div>
+                        <div class="user-details">
+                            <span class="greeting">Merhaba</span>
+                            <!-- Kullanıcı tam adı script.js tarafından dinamik yazılır -->
+                            <span class="user-fullname" id="user-fullname">Berkay ÇÜRÜK</span>
+                        </div>
+                    </div>
+                    <hr class="dropdown-divider">
+
+                    <!-- Kullanıcı profil/adres yönetim linki -->
+                    <a href="hesabim.html" class="dropdown-menu-item"
+                        style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; text-decoration: none; color: #334155; font-size: 14px; border-radius: 6px; transition: background-color 0.2s;">
+                        <span>👤</span>
+                        <span>Hesabım</span>
+                    </a>
+
+                    <hr class="dropdown-divider">
+
+                    <!-- Siparişlerim sayfası linki -->
+                    <a href="siparis.html" class="dropdown-menu-item"
+                        style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; text-decoration: none; color: #334155; font-size: 14px; border-radius: 6px; transition: background-color 0.2s;">
+                        <span>📦</span>
+                        <span>Siparişlerim</span>
+                    </a>
+
+                    <hr class="dropdown-divider">
+                    <!-- Oturumu kapatıp localStorage'ı temizleyen buton -->
+                    <button id="logout-btn" class="logout-link" type="button">Çıkış Yap</button>
+                </div>
+            </div>
+
+            <!-- Favorilerim Kısayolu -->
+            <a href="favoriler.html" class="header1-item">
+                <span class="icon">♡</span>
+                <span>Favoriler</span>
+            </a>
+
+            <!-- Sepetim Kısayolu -->
+            <a href="sepet.html" class="header1-item">
+                <span class="icon">🛒</span>
+                <span>Sepetim</span>
+            </a>
+
+        </div>
+
+    </header>
+
+    <!-- Kategori Menü Butonları -->
+    <div class="kategori-div">
+        <span><button class="kategori" type="button"><a href='kitaplar.html'>Kitaplar</a></button></span>
+        <span><button class="kategori" type="button"><a href='elektronik.html'>Elektronik</a></button></span>
+        <span><button class="kategori" type="button"><a href='hobi.html'>Hobi</a></button></span>
+        <span><button class="kategori" type="button"><a href='kirtasiye.html'>Kırtasiye</a></button></span>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- 3. DİNAMİK ÜYELİK VE GİRİŞ FORMU KAPSAYICISI -->
+    <!-- script.js dosyasındaki mod değiştirici (toggle) ile 'Giriş Yap' ve 'Üye Ol' arasında geçiş yapar -->
+    <!-- ========================================================================= -->
+    <div class="login-page">
+        <!-- Dinamik Form Başlığı: "Üye Ol" veya "Giriş Yap" olarak script.js tarafından güncellenir -->
+        <h2 id="form-title">Üye Ol</h2>
+
+        <form id="login-form">
+            <!-- Kayıt Alanları: 'register-field' sınıfı sayesinde Giriş moduna geçildiğinde gizlenir -->
+            <input class="login-name-spot register-field" type="text" id="name" placeholder="Adınız" required>
+            <input class="login-name-spot register-field" type="text" id="surname" placeholder="Soyadınız" required>
+
+            <!-- Ortak Kimlik Doğrulama Alanları: Hem Kayıt hem Giriş formunda aktiftir -->
+            <input class="login-register-spot" type="email" id="email" placeholder="E-Posta Adresi" required>
+            <input class="login-register-spot" type="password" id="password" placeholder="Şifre" required minlength="6">
+
+            <!-- Form Gönderme Butonu: script.js içindeki kayıt veya giriş API isteklerini tetikler -->
+            <button class="login-button" type="button" id="submit-btn">Üye Ol</button>
+        </form>
+
+        <!-- Form Modunu (Kayıt Ol <-> Giriş Yap) Değiştiren Alt Panel -->
+        <p>
+            <span id="toggle-text">Zaten hesabınız var mı?</span>
+            <button id="toggle-btn" type="button" style="background: none;
+    width: 85px;
+    border: 10px;
+    height: 25px;
+    border-radius: 5px;
+    background-color: #107c10;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 500;">Giriş Yapın</button>
+        </p>
+        <p style="color: red; margin-top: 15px;">*Tüm alanlar doldurulmalıdır.</p>
+    </div>
+
+    <!-- Kimlik doğrulama, API istekleri (/api/uyebilgi/kayit ve /api/uyebilgi/girisyap) ve mod geçiş scripti -->
+    <script src="script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <!-- Karakter seti ve mobil responsive ekran yerleşimi tanımları -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ana Sayfa/Kitaplar</title>
+    <!-- Projenin harici CSS stil dosyası bağlantısı -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ========================================================================= -->
+    <!-- 1. ÜST KAMPANYA VE DUYURU BANNERI -->
+    <!-- ========================================================================= -->
+    <header>
+        <!-- <nav>
+            <a href="#">Ana Sayfa</a>
+        </nav> -->
+        <img class="header-img"
+            src="https://i.dr.com.tr/pimages/Content/Uploads/BannerFiles/dr/2026-TEMMUZ-SERINLETEN-URUNLER-HELLO-BAR1140X60.webp"
+            alt="">
+    </header>
+
+    <!-- ========================================================================= -->
+    <!-- 2. ANA HEADER (LOGO, ARAMA FORMU, İNDİRİMLER VE KULLANICI DROPDOWN MENÜSÜ) -->
+    <!-- ========================================================================= -->
+    <header class="header1">
+
+        <!-- Logo alanı: Ana sayfaya yönlendirir -->
+        <!-- LOGO -->
+        <div class="logo">
+            <a href="index.html">
+                <img class="logo_img" src="/image/logo.jpg" alt="Logo">
+            </a>
+        </div>
+
+        <!-- Ürün Arama Çubuğu: Backend /api/genel endpoint'ine 'kelime' parametresi gönderir -->
+        <!-- SEARCH -->
+        <div class="search-box">
+            <form class="search-container" action="http://localhost:5192/api/genel" method="GET" role="search">
+
+                <div class="search-input-wrapper">
+                    <input type="search" class="search-input" name="kelime"
+                        placeholder="Ürün, kategori veya marka arayın..." maxlength="60" autocomplete="off"
+                        aria-label="Ürün arama" />
+                </div>
+
+                <button type="submit" class="search-submit-btn">Ara</button>
+            </form>
+        </div>
+
+        <!-- İndirimli Ürünleri Filtreleyen Buton (script.js üzerinden tetiklenir) -->
+        <span><button class="search-discount" type="button" onclick="indirimliUrunleriGetir()">İndirimli
+                Ürünler</button></span>
+
+        <!-- Kullanıcı Aksiyon Menüsü (Giriş/Kayıt, Profil Dropdown, Favoriler, Sepet) -->
+        <div class="header1-actions">
+
+            <!-- Ziyaretçi Giriş/Kayıt Butonu (Kullanıcı giriş yaptığında 'd-none' eklenir) -->
+            <a href="uye.html" class="header1-item" id="nav-login-btn">
+                <span class="icon">👤</span>
+                <span>Giriş Yap/Kayıt Ol</span>
+            </a>
+
+            <!-- Giriş Yapılmışsa Görünen Dropdown Menü (Oturum açıkken 'd-none' kaldırılır) -->
+            <div class="header1-item user-dropdown d-none" id="user-menu">
+                <div class="user-dropdown-trigger">
+                    <span class="icon">👤</span>
+                    <span>Hesabım</span>
+                </div>
+                <div class="dropdown-content">
+                    <div class="user-info-row">
+                        <!-- Kullanıcı ad-soyad baş harfleri avatarı -->
+                        <div class="user-avatar" id="user-avatar-badge">BÇ</div>
+                        <div class="user-details">
+                            <span class="greeting">Merhaba</span>
+                            <!-- Kullanıcı tam adı dinamik basılır -->
+                            <span class="user-fullname" id="user-fullname">Berkay ÇÜRÜK</span>
+                        </div>
+                    </div>
+                    <hr class="dropdown-divider">
+
+                    <!-- Kullanıcı profil/adres yönetim linki -->
+                    <a href="hesabim.html" class="dropdown-menu-item"
+                        style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; text-decoration: none; color: #334155; font-size: 14px; border-radius: 6px; transition: background-color 0.2s;">
+                        <span>👤</span>
+                        <span>Hesabım</span>
+                    </a>
+
+                    <hr class="dropdown-divider">
+
+                    <!-- Siparişlerim sayfası linki -->
+                    <a href="siparis.html" class="dropdown-menu-item"
+                        style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; text-decoration: none; color: #334155; font-size: 14px; border-radius: 6px; transition: background-color 0.2s;">
+                        <span>📦</span>
+                        <span>Siparişlerim</span>
+                    </a>
+
+                    <hr class="dropdown-divider">
+                    <!-- Oturumu kapatıp localStorage'ı temizleyen buton -->
+                    <button id="logout-btn" class="logout-link" type="button">Çıkış Yap</button>
+                </div>
+            </div>
+
+            <!-- Favorilerim Kısayolu -->
+            <a href="favoriler.html" class="header1-item">
+                <span class="icon">♡</span>
+                <span>Favoriler</span>
+            </a>
+
+            <!-- Sepetim Kısayolu -->
+            <a href="sepet.html" class="header1-item">
+                <span class="icon">🛒</span>
+                <span>Sepetim</span>
+            </a>
+
+        </div>
+
+    </header>
+
+    <!-- Kategori Menü Butonları -->
+    <div class="kategori-div">
+        <span><button class="kategori" type="button"><a href='kitaplar.html'>Kitaplar</a></button></span>
+        <span><button class="kategori" type="button"><a href='elektronik.html'>Elektronik</a></button></span>
+        <span><button class="kategori" type="button"><a href='hobi.html'>Hobi</a></button></span>
+        <span><button class="kategori" type="button"><a href='kirtasiye.html'>Kırtasiye</a></button></span>
+    </div>
+
+    <!-- Sayfa Navigasyon Breadcrumb Başlığı -->
+    <h5 class="kitaplar-ana-sayfa-kitaplar">Ana Sayfa/Kitaplar</h5>
+
+    <!-- ========================================================================= -->
+    <!-- 3. YAYINEVİ SLIDER ALANI (NOX, KRONİK, İŞ BANKASI VB.) -->
+    <!-- Tıklanan yayınevi kartının 'data-kelime' değeriyle arama/filtreleme tetiklenir -->
+    <!-- ========================================================================= -->
+    <div class="kitaplar-section">
+        <span>
+            <h2 class="kitaplar-baslik">Kitaplar</h2>
+        </span>
+
+        <div class="brand-slider-wrapper">
+
+            <!-- Slider sol kaydırma butonu -->
+            <button class="slider-btn prev-btn" id="slideLeft" aria-label="Sola Kaydır">&#10094;</button>
+
+            <!-- Kaydırılabilir yayınevi kartları pisti -->
+            <div class="brand-slider-track" id="sliderTrack">
+
+                <div class="brand-slide-item">
+                    <a href="#" class="arama-butonu" data-kelime="nox yayınları" title="Nox Yayınları">
+                        <img src="image/nox.png" alt="Nox Yayınları">
+                    </a>
+                    <strong><span class="brand-slide-title">Nox Yayınları</span></strong>
+                </div>
+
+                <div class="brand-slide-item">
+                    <a href="#" class="arama-butonu" title="Kronik Kitap" data-kelime="kronik kitap">
+                        <img src="image/kronik.png" alt="Kronik Kitap">
+                    </a>
+                    <strong><span class="brand-slide-title">Kronik Kitap</span></strong>
+                </div>
+
+                <div class="brand-slide-item">
+                    <a href="#" class="arama-butonu" title="Türkiye İş Bankası"
+                        data-kelime="İş Bankası Kültür Yayınları">
+                        <img src="image/işbankası.png" alt="Türkiye İş Bankası">
+                    </a>
+                    <strong><span class="brand-slide-title">Türkiye İş Bankası</span></strong>
+                </div>
+
+                <div class="brand-slide-item">
+                    <a href="#" class="arama-butonu" title="Turkuvaz Kitap" data-kelime="turkuvaz kitap">
+                        <img src="image/turkuvaz.jpg" alt="Turkuvaz Kitap">
+                    </a>
+                    <strong><span class="brand-slide-title">Turkuvaz Kitap</span></strong>
+                </div>
+
+                <div class="brand-slide-item">
+                    <a href="#" class="arama-butonu" title="Doğan Kitap" data-kelime="Doğan Kitap">
+                        <img src="image/doğan.png" alt="Doğan Kitap">
+                    </a>
+                    <strong><span class="brand-slide-title">Doğan Kitap</span></strong>
+                </div>
+
+                <div class="brand-slide-item">
+                    <a href="#" class="arama-butonu" title="İthaki Yayınları" data-kelime="İthaki Yayınları">
+                        <img src="image/ithaki.png" alt="İthaki Yayınları">
+                    </a>
+                    <strong><span class="brand-slide-title">İthaki Yayınları</span></strong>
+                </div>
+
+                <div class="brand-slide-item">
+                    <a href="#" class="arama-butonu" title="Elma Yayınevi" data-kelime="Elma Yayınevi">
+                        <img src="image/elma.jpg" alt="Elma Yayınevi">
+                    </a>
+                    <strong><span class="brand-slide-title">Elma Yayınevi</span></strong>
+                </div>
+
+                <div class="brand-slide-item">
+                    <a href="#" class="arama-butonu" title="İndigo Kitap" data-kelime="indigo kitap">
+                        <img src="image/indigo.jpg" alt="İndigo Kitap">
+                    </a>
+                    <strong><span class="brand-slide-title">İndigo Kitap</span></strong>
+                </div>
+
+                <div class="brand-slide-item">
+                    <a href="#" class="arama-butonu" title="Domingo Yayınevi" data-kelime="Domingo Yayınevi">
+                        <img src="image/domingo.png" alt="Domingo Yayınevi">
+                    </a>
+                    <strong><span class="brand-slide-title">Domingo Yayınevi</span></strong>
+                </div>
+
+            </div>
+
+            <!-- Slider sağ kaydırma butonu -->
+            <button class="slider-btn next-btn" id="slideRight" aria-label="Sağa Kaydır">&#10095;</button>
+        </div>
+    </div>
+
+
+    <!-- ========================================================================= -->
+    <!-- 4. KİTAP LİSTELEME VE YAZAR FİLTRELEME ALANI -->
+    <!-- ========================================================================= -->
+    <div class="product-section">
+
+        <!-- SOL FİLTRELER: Yazar checkbox filtreleme kolonu -->
+        <div class="filters-column">
+
+            <div class="checkbox-box">
+
+                <h4>Yazar seçin...</h4>
+
+                <!-- Checkbox seçildiğinde script.js 'data-yazar' özniteliği üzerinden ürünleri filtreler -->
+                <div class="category-list">
+
+                    <div class="check-item">
+                        <input type="checkbox" id="yazar1" data-yazar="Matt Haig">
+                        <label for="yazar1">Matt Haig</label>
+                    </div>
+
+                    <div class="check-item">
+                        <input type="checkbox" id="yazar2" data-yazar="Alice Feeney">
+                        <label for="yazar2">Alice Feeney</label>
+                    </div>
+
+                    <div class="check-item">
+                        <input type="checkbox" id="yazar3" data-yazar="George Orwell">
+                        <label for="yazar3">George Orwell</label>
+                    </div>
+
+                    <div class="check-item">
+                        <input type="checkbox" id="yazar4" data-yazar="Paulo Coelho">
+                        <label for="yazar4">Paulo Coelho</label>
+                    </div>
+
+                    <div class="check-item">
+                        <input type="checkbox" id="yazar5" data-yazar="Stephen King">
+                        <label for="yazar5">Stephen King</label>
+                    </div>
+
+                    <div class="check-item">
+                        <input type="checkbox" id="yazar6" data-yazar="Daniel Keyes">
+                        <label for="yazar6">Daniel Keyes</label>
+                    </div>
+
+                    <div class="check-item">
+                        <input type="checkbox" id="yazar7" data-yazar="Yuval Noah Harari">
+                        <label for="yazar7">Yuval Noah Harari</label>
+                    </div>
+
+                    <div class="check-item">
+                        <input type="checkbox" id="yazar8" data-yazar="Stefan Zweig">
+                        <label for="yazar8">Stefan Zweig</label>
+                    </div>
+
+                    <div class="check-item">
+                        <input type="checkbox" id="yazar9" data-yazar="Sabahattin Ali">
+                        <label for="yazar9">Sabahattin Ali</label>
+                    </div>
+
+                    <div class="check-item">
+                        <input type="checkbox" id="yazar10" data-yazar="Fyodor Dostoyevski">
+                        <label for="yazar10">Fyodor Dostoyevski</label>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- YAYINEVİ -->
+            <!-- <div class="checkbox-box">
+                <h4>Yayınevi seçin...</h4>
+                <div class="category-list">
+                    <div class="check-item">
+                        <input type="checkbox" id="yayinevi1" data-marka="İthaki Yayınları">
+                        <label for="yayinevi1">İthaki Yayınları</label>
+                    </div>
+                </div>
+            </div> -->
+
+        </div>
+
+
+        <!-- SAĞ ÜRÜN LİSTELEME GRID ALANI -->
+        <!-- script.js tarafından çekilen kitap ürün kartları ve sayfalama bu gridlere basılır -->
+        <!-- SAĞ ÜRÜNLER -->
+        <div class="products-area">
+
+            <!-- Kitaplar kategorisine ait ürünlerin varsayılan olarak basıldığı ana grid -->
+            <div class="products-grid" id="kitaplarGrid"></div>
+
+            <!-- Arama sonuçlarının basıldığı grid -->
+            <div class="products-grid" id="aramaSonuclari"></div>
+
+            <!-- İndirimli ürünler filtresi sonuçlarının basıldığı grid -->
+            <div class="products-grid" id="indirimliGrid"></div>
+
+            <!-- Sayfalama (Pagination) butonlarının dinamik oluşturulduğu alan -->
+            <div class="pagination" id="pagination"></div>
+
+        </div>
+        <!-- JavaScript buraya 30 ürün ekleyecek -->
+
+    </div>
+
+    </div>
+
+    <!-- Genel site etkileşimleri, API istekleri ve slider mekanizması scripti -->
+    <script src="script.js"></script>
+
+    <script>
+        // Sayfa yüklendiğinde kullanıcı oturumunu kontrol et ve header'ı senkronize et
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof kullaniciDurumunuKontrolEt === 'function') {
+                kullaniciDurumunuKontrolEt();
+            }
+        });
+    </script>
+</body>
+
+</html>

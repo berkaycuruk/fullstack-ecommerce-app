@@ -1,0 +1,66 @@
+/* CSS Değişkenleri ve Tema Ayarları */
+
+:root {
+    /* Font Aileleri */
+    --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-heading: 'Plus Jakarta Sans', var(--font-primary);
+
+    /* Renk Değişkenleri - Aydınlık (Light Mode) */
+    --bg-main: #f8fafc;
+    --bg-surface: #ffffff;
+    --bg-surface-hover: #f1f5f9;
+    --bg-header: rgba(255, 255, 255, 0.8);
+    
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --text-light: #94a3b8;
+    
+    --color-primary: #4f46e5;
+    --color-primary-hover: #4338ca;
+    --color-accent: #06b6d4;
+    --color-accent-hover: #0891b2;
+    --color-success: #10b981;
+    
+    --border-color: #e2e8f0;
+    --border-glow: rgba(79, 70, 229, 0.15);
+
+    /* Gölgeler */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-glow: 0 0 20px rgba(79, 70, 229, 0.2);
+
+    /* Geçişler ve Yarıçap */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-full: 9999px;
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+}
+
+/* Karanlık Mod (Dark Theme) Override */
+body.dark-theme {
+    --bg-main: #0b0f19;
+    --bg-surface: #151c2c;
+    --bg-surface-hover: #1e293b;
+    --bg-header: rgba(11, 15, 25, 0.85);
+
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --text-light: #64748b;
+
+    --color-primary: #6366f1;
+    --color-primary-hover: #4f46e5;
+    --color-accent: #22d3ee;
+    --color-accent-hover: #06b6d4;
+    --color-success: #34d399;
+
+    --border-color: #1e293b;
+    --border-glow: rgba(99, 102, 241, 0.25);
+
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.5);
+    --shadow-glow: 0 0 25px rgba(99, 102, 241, 0.35);
+}

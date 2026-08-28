@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <!-- Karakter kodlaması ve mobil cihazlar için responsive viewport ayarları -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Ürün Detayı</title>
+
+    <!-- Projenin genel CSS stil dosyası bağlantısı -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ========================================================================= -->
+    <!-- 1. ÜST KAMPANYA VE DUYURU BANNERI -->
+    <!-- ========================================================================= -->
+    <header>
+        <!-- <nav>
+            <a href="#">Ana Sayfa</a>
+        </nav> -->
+        <img class="header-img"
+            src="https://i.dr.com.tr/pimages/Content/Uploads/BannerFiles/dr/2026-TEMMUZ-SERINLETEN-URUNLER-HELLO-BAR1140X60.webp"
+            alt="">
+    </header>
+
+    <!-- ========================================================================= -->
+    <!-- 2. ANA HEADER (LOGO, ARAMA FORMU, İNDİRİMLER VE KULLANICI DROPDOWN MENÜSÜ) -->
+    <!-- ========================================================================= -->
+    <header class="header1">
+
+        <!-- Logo alanı: Ana sayfaya yönlendirir -->
+        <!-- LOGO -->
+        <div class="logo">
+            <a href="index.html">
+                <img class="logo_img" src="/image/logo.jpg" alt="Logo">
+            </a>
+        </div>
+
+        <!-- Ürün Arama Çubuğu: Backend /api/genel endpoint'ine GET parametresi yollar -->
+        <!-- SEARCH -->
+        <div class="search-box">
+            <form class="search-container" action="http://localhost:5192/api/genel" method="GET" role="search">
+
+                <div class="search-input-wrapper">
+                    <input type="search" class="search-input" name="kelime"
+                        placeholder="Ürün, kategori veya marka arayın..." maxlength="60" autocomplete="off"
+                        aria-label="Ürün arama" />
+                </div>
+
+                <button type="submit" class="search-submit-btn">Ara</button>
+            </form>
+        </div>
+
+        <!-- İndirimli ürünleri doğrudan listeleyen tetikleyici buton (script.js üzerinden yönetilir) -->
+        <span><button class="search-discount" type="button" onclick="indirimliUrunleriGetir()">İndirimli
+                Ürünler</button></span>
+
+        <!-- Kullanıcı Durum & Aksiyon Menüsü (Giriş/Kayıt, Profil Dropdown, Favoriler, Sepet) -->
+        <div class="header1-actions">
+
+            <!-- Ziyaretçi Giriş/Kayıt Butonu (Kullanıcı oturum açtığında JS ile 'd-none' eklenir) -->
+            <a href="uye.html" class="header1-item" id="nav-login-btn">
+                <span class="icon">👤</span>
+                <span>Giriş Yap/Kayıt Ol</span>
+            </a>
+
+            <!-- Aktif Kullanıcı Profil Menüsü (Oturum açıkken 'd-none' kaldırılarak gösterilir) -->
+            <div class="header1-item user-dropdown d-none" id="user-menu">
+                <div class="user-dropdown-trigger">
+                    <span class="icon">👤</span>
+                    <span>Hesabım</span>
+                </div>
+                <div class="dropdown-content">
+                    <div class="user-info-row">
+                        <!-- Kullanıcı ad-soyad baş harfleri avatarı -->
+                        <div class="user-avatar" id="user-avatar-badge">BÇ</div>
+                        <div class="user-details">
+                            <span class="greeting">Merhaba</span>
+                            <!-- Kullanıcı tam adı dinamik basılır -->
+                            <span class="user-fullname" id="user-fullname">Berkay ÇÜRÜK</span>
+                        </div>
+                    </div>
+                    <hr class="dropdown-divider">
+
+                    <!-- Kullanıcı profil/adres yönetim linki -->
+                    <a href="hesabim.html" class="dropdown-menu-item"
+                        style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; text-decoration: none; color: #334155; font-size: 14px; border-radius: 6px; transition: background-color 0.2s;">
+                        <span>👤</span>
+                        <span>Hesabım</span>
+                    </a>
+
+                    <hr class="dropdown-divider">
+
+                    <!-- Siparişlerim sayfası linki -->
+                    <a href="siparis.html" class="dropdown-menu-item"
+                        style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; text-decoration: none; color: #334155; font-size: 14px; border-radius: 6px; transition: background-color 0.2s;">
+                        <span>📦</span>
+                        <span>Siparişlerim</span>
+                    </a>
+
+                    <hr class="dropdown-divider">
+                    <!-- Oturumu kapatıp localStorage'ı temizleyen buton -->
+                    <button id="logout-btn" class="logout-link" type="button">Çıkış Yap</button>
+                </div>
+            </div>
+
+            <!-- Favorilerim Kısayolu -->
+            <a href="favoriler.html" class="header1-item">
+                <span class="icon">♡</span>
+                <span>Favoriler</span>
+            </a>
+
+            <!-- Sepetim Kısayolu -->
+            <a href="sepet.html" class="header1-item">
+                <span class="icon">🛒</span>
+                <span>Sepetim</span>
+            </a>
+        </div>
+
+    </header>
+
+    <!-- Kategori Menü Butonları -->
+    <div class="kategori-div">
+        <span><button class="kategori" type="button"><a href='kitaplar.html'>Kitaplar</a></button></span>
+        <span><button class="kategori" type="button"><a href='elektronik.html'>Elektronik</a></button></span>
+        <span><button class="kategori" type="button"><a href='hobi.html'>Hobi</a></button></span>
+        <span><button class="kategori" type="button"><a href='kirtasiye.html'>Kırtasiye</a></button></span>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- 3. ÜRÜN DETAY KAPSAYICISI (GÖRSEL, BİLGİLER, FİYAT VE SEPET/FAVORİ BUTONLARI) -->
+    <!-- urun-detay.js dosyası URL'deki 'fotolink' parametresini okuyarak bilgileri basar -->
+    <!-- ========================================================================= -->
+    <div class="product-detail-container">
+
+        <!-- ÜST KISIM -->
+        <div class="product-detail-top">
+
+            <!-- SOL: ÜRÜN FOTOĞRAFI (urun-detay.js tarafından 'src' atanır) -->
+            <!-- SOL: ÜRÜN FOTOĞRAFI -->
+            <div class="product-detail-image">
+                <img id="urunFotograf" src="" alt="Ürün Fotoğrafı">
+            </div>
+
+            <!-- SAĞ: ÜRÜN BİLGİLERİ -->
+            <!-- SAĞ: ÜRÜN BİLGİLERİ -->
+            <div class="product-detail-info">
+
+                <!-- Dinamik Ürün Başlığı -->
+                <h1 id="urunAdi"></h1>
+
+                <!-- Marka / Yazar / Yayınevi Bilgisi -->
+                <!-- Marka / Yazar -->
+                <div id="urunBilgi"></div>
+
+                <!-- Ürün Yıldız Değerlendirme Puanı -->
+                <span>
+                    ⭐ <strong id="urunYildiz"></strong>
+                </span>
+
+                <!-- İndirimli ve Normal Fiyat Alanı -->
+                <!-- Fiyat -->
+                <div class="product-detail-price" id="urunFiyat"></div>
+
+                <!-- Sepete ve Favorilere Ekleme Aksiyon Butonları -->
+                <!-- Sepet / Favori -->
+                <div class="product-detail-buttons">
+
+                    <!-- Sepete Ekle Butonu: urun-detay.js üzerinden sepeteEkle() fonksiyonunu tetikler -->
+                    <button style="cursor: pointer;" id="sepeteEkleBtn" class="sepete-ekle-btn">
+                        🛒 Sepete Ekle
+                    </button>
+
+                    <!-- Favorilere Ekle Butonu: urun-detay.js üzerinden favEkle() fonksiyonunu tetikler -->
+                    <button style="cursor: pointer; color:white; background-color: red;" id="favorilereEkleBtn"
+                        class="favorilere-ekle-btn">
+                        ♡ Favorilere Ekle
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ========================================================================= -->
+        <!-- 4. ALT KISIM: ÜRÜN DETAYLI AÇIKLAMASI VE DEĞERLENDİRME PUANI -->
+        <!-- ========================================================================= -->
+        <!-- ALT KISIM: ÜRÜN DETAYLARI -->
+        <div class="product-detail-description">
+
+            <h2>Ürün Detayları</h2>
+
+            <!-- Değerlendirme Puanı Bilgisi -->
+            <!-- Değerlendirme -->
+            <div class="product-detail-rating">
+                <span>
+                    Değerlendirme <strong id="urunDegerlendirme"></strong>
+                </span>
+            </div>
+
+            <!-- Detaylı Ürün Açıklama Metni (urun-detay.js tarafından doldurulur) -->
+            <!-- Açıklama -->
+            <div class="product-detail-aciklama">
+                <h3>Açıklama</h3>
+                <p id="urunAciklama"></p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Genel site motoru (oturum, sepet, favori fonksiyonları) -->
+    <script src="script.js"></script>
+
+    <!-- Detay sayfası veri çekme, DOM yerleştirme ve buton bağlama mantığını yöneten script -->
+    <script src="urun-detay.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <!-- Karakter kodlaması ve mobil cihazlar için responsive ekran tanımı -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hesabım - B&S Store</title>
+    <!-- Projenin harici CSS stil dosyası -->
+    <link rel="stylesheet" href="style.css">
+    <!-- SweetAlert2 kütüphanesi: Modern modal onay kutuları ve bildirimler için -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- ========================================================================= -->
+    <!-- SAYFAYA ÖZEL CSS STİLLERİ (HESAP YÖNETİMİ, SEKMELER VE FORM BİLEŞENLERİ) -->
+    <!-- ========================================================================= -->
+    <style>
+        .hesap-container {
+            display: flex;
+            gap: 30px;
+            max-width: 1200px;
+            margin: 25px auto;
+            padding: 0 15px;
+        }
+
+        .sidebar-wrapper {
+            width: 280px;
+            flex-shrink: 0;
+        }
+
+        .hesap-icerik {
+            flex: 1;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04);
+            width: 500px;
+        }
+
+        .hesap-baslik {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Form Elemanları ve Grid Düzeni */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-grup {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 18px;
+        }
+
+        .form-grup label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #475569;
+        }
+
+        .form-grup input,
+        .form-grup textarea {
+            padding: 10px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            font-family: inherit;
+        }
+
+        .form-grup input:focus,
+        .form-grup textarea:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .btn-kaydet {
+            background: #2563eb;
+            color: #ffffff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-kaydet:hover {
+            background: #1d4ed8;
+        }
+
+        /* Adres Kartları ve Silme Butonu Stilleri */
+        .adres-kartlari-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .adres-karti {
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 16px;
+            background: #f8fafc;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .adres-karti-baslik {
+            font-weight: 700;
+            font-size: 15px;
+            color: #1e293b;
+            margin-bottom: 4px;
+        }
+
+        .adres-karti-metin {
+            font-size: 13px;
+            color: #64748b;
+            line-height: 1.5;
+            word-break: break-word;
+        }
+
+        .adres-sil-btn {
+            background: #fee2e2;
+            color: #dc2626;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background 0.2s;
+        }
+
+        .adres-sil-btn:hover {
+            background: #fecaca;
+        }
+
+        /* Sekme Görünürlük Yönetimi */
+        .sekme-icerik {
+            display: none;
+        }
+
+        .sekme-icerik.aktif {
+            display: block;
+        }
+
+        .account-menu-list li a {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ========================================================================= -->
+    <!-- 1. ÜST KAMPANYA BANNER ALANI -->
+    <!-- ========================================================================= -->
+    <header>
+        <img class="header-img"
+            src="https://i.dr.com.tr/pimages/Content/Uploads/BannerFiles/dr/2026-TEMMUZ-SERINLETEN-URUNLER-HELLO-BAR1140X60.webp"
+            alt="Banner">
+    </header>
+
+    <!-- ========================================================================= -->
+    <!-- 2. ANA HEADER (LOGO, GLOBAL ARAMA, İNDİRİMLER VE KULLANICI DROPDOWN MENÜSÜ) -->
+    <!-- ========================================================================= -->
+    <header class="header1">
+        <!-- Logo alanı: Ana sayfaya yönlendirir -->
+        <div class="logo">
+            <a href="index.html">
+                <img class="logo_img" src="/image/logo.jpg" alt="Logo">
+            </a>
+        </div>
+
+        <!-- Arama Formu: /api/genel endpoint'ine GET isteği gönderir -->
+        <div class="search-box">
+            <form class="search-container" action="http://localhost:5192/api/genel" method="GET" role="search">
+                <div class="search-input-wrapper">
+                    <input type="search" class="search-input" name="kelime"
+                        placeholder="Ürün, kategori veya marka arayın..." maxlength="60" autocomplete="off"
+                        aria-label="Ürün arama" />
+                </div>
+                <button type="submit" class="search-submit-btn">Ara</button>
+            </form>
+        </div>
+
+        <!-- İndirimli Ürünleri Filtreleyen Buton (script.js üzerinden tetiklenir) -->
+        <span><button class="search-discount" type="button" onclick="indirimliUrunleriGetir()">İndirimli
+                Ürünler</button></span>
+
+        <!-- Kullanıcı Aksiyon Menüsü (Giriş/Kayıt, Profil Menüsü, Favoriler, Sepet) -->
+        <div class="header1-actions">
+            <!-- Giriş Yapılmamışsa Görünen Buton (Oturum açıldığında 'd-none' eklenir) -->
+            <a href="uye.html" class="header1-item" id="nav-login-btn">
+                <span class="icon">👤</span>
+                <span>Giriş Yap/Kayıt Ol</span>
+            </a>
+
+            <!-- Giriş Yapılmışsa Görünen Dropdown Menü (Oturum açıldığında 'd-none' kaldırılır) -->
+            <div class="header1-item user-dropdown d-none" id="user-menu">
+                <div class="user-dropdown-trigger">
+                    <span class="icon">👤</span>
+                    <span>Hesabım</span>
+                </div>
+                <div class="dropdown-content">
+                    <div class="user-info-row">
+                        <!-- Kullanıcı ad-soyad baş harfleri -->
+                        <div class="user-avatar" id="user-avatar-badge">BÇ</div>
+                        <div class="user-details">
+                            <span class="greeting">Merhaba</span>
+                            <!-- Kullanıcı tam adı dinamik yazılır -->
+                            <span class="user-fullname" id="user-fullname">Kullanıcı Adı</span>
+                        </div>
+                    </div>
+                    <hr class="dropdown-divider">
+                    <a href="hesabim.html" class="dropdown-menu-item"
+                        style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; text-decoration: none; color: #334155; font-size: 14px; border-radius: 6px;">
+                        <span>👤</span>
+                        <span>Üyelik Bilgilerim</span>
+                    </a>
+                    <a href="siparis.html" class="dropdown-menu-item"
+                        style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; text-decoration: none; color: #334155; font-size: 14px; border-radius: 6px;">
+                        <span>📦</span>
+                        <span>Siparişlerim</span>
+                    </a>
+                    <hr class="dropdown-divider">
+                    <!-- Oturumu sonlandıran çıkış butonu -->
+                    <button id="logout-btn" class="logout-link" type="button">Çıkış Yap</button>
+                </div>
+            </div>
+
+            <!-- Favorilerim Kısayolu -->
+            <a href="favoriler.html" class="header1-item">
+                <span class="icon">♡</span>
+                <span>Favoriler</span>
+            </a>
+
+            <!-- Sepetim Kısayolu -->
+            <a href="sepet.html" class="header1-item">
+                <span class="icon">🛒</span>
+                <span>Sepetim</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- Kategori Menü Butonları -->
+    <div class="kategori-div">
+        <span><button class="kategori" type="button"><a href='kitaplar.html'>Kitaplar</a></button></span>
+        <span><button class="kategori" type="button"><a href='elektronik.html'>Elektronik</a></button></span>
+        <span><button class="kategori" type="button"><a href='hobi.html'>Hobi</a></button></span>
+        <span><button class="kategori" type="button"><a href='kirtasiye.html'>Kırtasiye</a></button></span>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- 3. ANA HESAP PANELİ (SOL SEKME MENÜSÜ VE SAĞ İÇERİK FORMLARI) -->
+    <!-- ========================================================================= -->
+    <main class="hesap-container">
+        <!-- SOL SIDEBAR: Profil kartı ve sekme geçiş linkleri -->
+        <!-- SOL SIDEBAR -->
+        <aside class="sidebar-wrapper">
+            <div class="dr-account-card" id="user-profile-menu">
+                <div class="user-header">
+                    <div class="user-avatar-sq" id="menu-avatar-badge">BÇ</div>
+                    <div class="user-text-info">
+                        <span class="greeting-text">Merhaba,</span>
+                        <strong class="user-fullname-text" id="menu-fullname">Kullanıcı Adı</strong>
+                    </div>
+                </div>
+
+                <ul class="account-menu-list">
+                    <!-- 1. Sekme Linki: Üyelik Bilgilerini Düzenle -->
+                    <li>
+                        <a href="javascript:void(0)" onclick="sekmeGoster('bilgilerim')" id="menu-link-bilgilerim"
+                            class="menu-link ">
+                            <span>👤 Üyelik Bilgilerim</span>
+                        </a>
+                    </li>
+                    <!-- 2. Sekme Linki: Adres Bilgilerini Yönet -->
+                    <li>
+                        <a href="javascript:void(0)" onclick="sekmeGoster('adreslerim')" id="menu-link-adreslerim"
+                            class="menu-link ">
+                            <span>📍 Adres Bilgilerim</span>
+                        </a>
+                    </li>
+                    <!-- 3. Sekme Linki: Şifre Değiştirme -->
+                    <li>
+                        <a href="javascript:void(0)" onclick="sekmeGoster('sifre')" id="menu-link-sifre"
+                            class="menu-link active-link">
+                            <span>🔒 Şifre Değiştir</span>
+                        </a>
+                    </li>
+
+                    <!-- Hesabı ve Veritabanı Kayıtlarını Kalıcı Olarak Silme Tetikleyicisi -->
+                    <li>
+                        <a href="javascript:void(0)" onclick="hesabiSil()" class="menu-link"
+                            style="color: #dc2626; font-weight: 600;">
+                            <span>🗑️ Hesabımı Sil</span>
+                        </a>
+                    </li>
+                    <!-- Siparişler Sayfası Kısayolu -->
+                    <li>
+                        <a href="siparis.html" class="menu-link">
+                            <span>📦 Siparişlerim</span>
+                        </a>
+                    </li>
+                    <!-- Favoriler Sayfası Kısayolu -->
+                    <li>
+                        <a href="favoriler.html" class="menu-link">
+                            <span>♡ Favorilerim</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="logout-wrapper">
+                    <!-- Sol panel çıkış butonu -->
+                    <button type="button" class="red-logout-btn" id="profile-logout-btn">Çıkış Yap</button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- SAĞ İÇERİK: Seçilen sekmeye göre değişen form ekranları -->
+        <!-- SAĞ İÇERİK -->
+        <section class="hesap-icerik">
+
+            <!-- ----------------------------------------------------------------- -->
+            <!-- 1. SEKME: ÜYELİK VE PROFİL BİLGİLERİ GÜNCELLEME FORMU -->
+            <!-- ----------------------------------------------------------------- -->
+            <!-- 1. SEKME: ÜYELİK BİLGİLERİ -->
+            <div id="sekme-bilgilerim" class="sekme-icerik aktif">
+                <div class="hesap-baslik">👤 Üyelik Bilgilerim</div>
+                <form id="form-uyelik-bilgileri" onsubmit="bilgileriGuncelle(event)">
+                    <div class="form-grid">
+                        <div class="form-grup">
+                            <label>Adınız</label>
+                            <input type="text" id="profil-ad" required placeholder="Adınız">
+                        </div>
+                        <div class="form-grup">
+                            <label>Soyadınız</label>
+                            <input type="text" id="profil-soyad" required placeholder="Soyadınız">
+                        </div>
+                    </div>
+                    <div class="form-grup">
+                        <label>E-Posta Adresi</label>
+                        <input type="email" id="profil-eposta" required placeholder="ornek@mail.com">
+                    </div>
+                    <div class="form-grup">
+                        <label>Telefon Numarası</label>
+                        <input type="tel" id="profil-telefon" placeholder="05XXXXXXXXX" maxlength="11">
+                    </div>
+                    <button type="submit" class="btn-kaydet">Bilgileri Güncelle</button>
+                </form>
+            </div>
+
+            <!-- ----------------------------------------------------------------- -->
+            <!-- 2. SEKME: ADRES YÖNETİMİ (LİSTELEME + YENİ ADRES EKLEME) -->
+            <!-- ----------------------------------------------------------------- -->
+            <!-- 2. SEKME: ADRES YÖNETİMİ -->
+            <div id="sekme-adreslerim" class="sekme-icerik">
+                <div class="hesap-baslik">📍 Kayıtlı Adreslerim</div>
+
+                <!-- Kayıtlı adres kartlarının dinamik basıldığı kapsayıcı div -->
+                <div class="adres-kartlari-grid" id="kayitli-adresler-listesi">
+                    <!-- Dinamik Adresler -->
+                </div>
+
+                <div class="hesap-baslik" style="font-size: 16px; margin-top: 30px;">➕ Yeni Adres Ekle</div>
+                <form id="form-yeni-adres" onsubmit="yeniAdresEkle(event)">
+                    <div class="form-grup">
+                        <label>Adres Başlığı</label>
+                        <input type="text" id="adres-baslik" placeholder="Örn: Ev, İş Yeri" required>
+                    </div>
+                    <div class="form-grup">
+                        <label>Açık Adres (Mahalle, Sokak, No, Daire, İlçe/İl)</label>
+                        <textarea id="adres-acik" rows="3" placeholder="Açık adresinizi eksiksiz girin..."
+                            required></textarea>
+                    </div>
+                    <button type="submit" class="btn-kaydet">Adresi Kaydet</button>
+                </form>
+            </div>
+
+            <!-- ----------------------------------------------------------------- -->
+            <!-- 3. SEKME: ŞİFRE DEĞİŞTİRME FORMU -->
+            <!-- ----------------------------------------------------------------- -->
+            <!-- 3. SEKME: ŞİFRE DEĞİŞTİRME -->
+            <div id="sekme-sifre" class="sekme-icerik">
+                <div class="hesap-baslik">🔒 Şifre Değiştir</div>
+                <form id="form-sifre-degistir" onsubmit="sifreDegistir(event)">
+                    <div class="form-grup">
+                        <label>Mevcut Şifre</label>
+                        <input type="password" id="mevcut-sifre" required placeholder="••••••••">
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-grup">
+                            <label>Yeni Şifre</label>
+                            <input type="password" id="yeni-sifre" required placeholder="••••••••">
+                        </div>
+                        <div class="form-grup">
+                            <label>Yeni Şifre (Tekrar)</label>
+                            <input type="password" id="yeni-sifre-tekrar" required placeholder="••••••••">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-kaydet">Şifreyi Güncelle</button>
+                </form>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- ========================================================================= -->
+    <!-- 4. HESAP YÖNETİMİ, API ENTEGRASYONLARI VE JS MOTORU -->
+    <!-- ========================================================================= -->
+    <script>
+        // =========================================================
+        // A. AKTİF OTURUM VE KULLANICI VERİLERİNİ ÇEKME
+        // =========================================================
+
+        /**
+         * LocalStorage'daki 'aktifKullanici' JSON verisini parse ederek döner.
+         */
+        // Aktif Kullanıcı Verisini Getir
+        function aktifKullaniciGetir() {
+            const raw = localStorage.getItem("aktifKullanici");
+            if (!raw) return null;
+            try {
+                return JSON.parse(raw);
+            } catch (e) {
+                return null;
+            }
+        }
+
+        /**
+         * Aktif kullanıcının GUID/ID değerini normalize ederek döner.
+         */
+        // Aktif Kullanıcı ID'sini Yakala
+        function aktifUyeIdGetir() {
+            const user = aktifKullaniciGetir();
+            if (!user) return null;
+            return user.uye_id || user.id || user.uyeId || null;
+        }
+
+        // =========================================================
+        // B. SEKME YÖNETİMİ (TAB SWITCHER)
+        // =========================================================
+
+        /**
+         * Sol menüden tıklanan sekmeyi aktif yapar, diğerlerini gizler.
+         */
+        // Sekme Değiştirici
+        function sekmeGoster(sekmeAdi) {
+            document.querySelectorAll(".sekme-icerik").forEach(el => el.classList.remove("aktif"));
+            document.querySelectorAll(".account-menu-list a").forEach(el => el.classList.remove("active-link"));
+
+            const hedefSekme = document.getElementById(`sekme-${sekmeAdi}`);
+            const hedefMenu = document.getElementById(`menu-link-${sekmeAdi}`);
+
+            if (hedefSekme) hedefSekme.classList.add("aktif");
+            if (hedefMenu) hedefMenu.classList.add("active-link");
+        }
+
+        // =========================================================
+        // C. SAYFA VE FORM BİLGİLERİNİ DOLDURMA (INITIALIZATION)
+        // =========================================================
+
+        /**
+         * Sayfa açıldığında kullanıcının mevcut profil bilgilerini form inputlarına ve başlıklara yerleştirir.
+         */
+        // Sayfa Bilgilerini Yükle
+        function bilgileriYukle() {
+            const user = aktifKullaniciGetir();
+            if (!user) {
+                window.location.href = "uye.html";
+                return;
+            }
+
+            const ad = user.uye_ad || user.ad || "";
+            const soyad = user.uye_soyad || user.soyad || "";
+            const tamAd = `${ad} ${soyad.toUpperCase()}`.trim();
+            const basHarfler = `${ad.charAt(0)}${soyad.charAt(0)}`.toUpperCase() || "U";
+
+            document.getElementById("user-fullname").textContent = tamAd;
+            document.getElementById("user-avatar-badge").textContent = basHarfler;
+            document.getElementById("menu-fullname").textContent = tamAd;
+            document.getElementById("menu-avatar-badge").textContent = basHarfler;
+
+            document.getElementById("nav-login-btn")?.classList.add("d-none");
+            document.getElementById("user-menu")?.classList.remove("d-none");
+
+            document.getElementById("profil-ad").value = ad;
+            document.getElementById("profil-soyad").value = soyad;
+            document.getElementById("profil-eposta").value = user.eposta || user.email || "";
+            document.getElementById("profil-telefon").value = user.telefon || "";
+
+            adresleriListele();
+        }
+
+        // =========================================================
+        // D. PROFİL BİLGİLERİ GÜNCELLEME (API + LOCALSTORAGE)
+        // =========================================================
+
+        /**
+         * 1. Profil Güncelleme
+         * Formdaki verileri alır, backend API'deki /api/kullanici/guncelle endpoint'ine POST atar
+         * ve localStorage'ı güncelleyerek arayüzü yeniler.
+         */
+        // 1. Profil Güncelleme
+        function bilgileriGuncelle(e) {
+            e.preventDefault();
+            const user = aktifKullaniciGetir();
+
+            user.uye_ad = document.getElementById("profil-ad").value.trim();
+            user.uye_soyad = document.getElementById("profil-soyad").value.trim();
+            user.eposta = document.getElementById("profil-eposta").value.trim();
+            user.telefon = document.getElementById("profil-telefon").value.trim();
+
+            localStorage.setItem("aktifKullanici", JSON.stringify(user));
+            alert("Profil bilgileriniz başarıyla güncellendi.");
+            bilgileriYukle();
+        }
+
+        // 2. Adres İşlemleri
+        // 2. Adres İşlemleri (Silme ve Listeleme Korumalı)
+        // 1. Profil Güncelleme (Backend API + LocalStorage Eşzamanlı)
+        // Sayfa Yüklendiğinde Bilgileri Formlara Doldur
+        function bilgileriYukle() {
+            const user = aktifKullaniciGetir();
+            if (!user) {
+                window.location.href = "uye.html";
+                return;
+            }
+
+            const ad = user.uye_ad || user.ad || "";
+            const soyad = user.uye_soyad || user.soyad || "";
+            const tamAd = `${ad} ${soyad.toUpperCase()}`.trim();
+            const basHarfler = `${ad.charAt(0)}${soyad.charAt(0)}`.toUpperCase() || "U";
+
+            // Header ve Sidebar Alanları
+            const userFullname = document.getElementById("user-fullname");
+            const userAvatar = document.getElementById("user-avatar-badge");
+            const menuFullname = document.getElementById("menu-fullname");
+            const menuAvatar = document.getElementById("menu-avatar-badge");
+
+            if (userFullname) userFullname.textContent = tamAd;
+            if (userAvatar) userAvatar.textContent = basHarfler;
+            if (menuFullname) menuFullname.textContent = tamAd;
+            if (menuAvatar) menuAvatar.textContent = basHarfler;
+
+            document.getElementById("nav-login-btn")?.classList.add("d-none");
+            document.getElementById("user-menu")?.classList.remove("d-none");
+
+            // Form İnputlarını Doldur
+            document.getElementById("profil-ad").value = ad;
+            document.getElementById("profil-soyad").value = soyad;
+            document.getElementById("profil-eposta").value = user.uye_eposta || user.eposta || user.email || "";
+            document.getElementById("profil-telefon").value = user.telefon || "";
+
+            adresleriListele();
+        }
+
+        /**
+         * Asenkron Profil Güncelleme Motoru (Backend API ile tam senkronizasyon)
+         */
+        // Profil Güncelleme (API + LocalStorage)
+        async function bilgileriGuncelle(e) {
+            e.preventDefault();
+
+            const user = aktifKullaniciGetir();
+            const uyeId = aktifUyeIdGetir();
+
+            if (!user || !uyeId) {
+                alert("Oturum bulunamadı. Lütfen tekrar giriş yapın.");
+                window.location.href = "uye.html";
+                return;
+            }
+
+            const ad = document.getElementById("profil-ad").value.trim();
+            const soyad = document.getElementById("profil-soyad").value.trim();
+            const eposta = document.getElementById("profil-eposta").value.trim();
+            const telefon = document.getElementById("profil-telefon").value.trim();
+
+            if (!ad || !soyad || !eposta) {
+                alert("Lütfen ad, soyad ve e-posta alanlarını eksiksiz doldurun.");
+                return;
+            }
+
+            try {
+                // Backend'deki /api/kullanici/guncelle endpoint'ine istek gönder
+                const response = await fetch("http://localhost:5192/api/kullanici/guncelle", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        uye_id: uyeId,
+                        ad: ad,
+                        soyad: soyad,
+                        eposta: eposta,
+                        telefon: telefon
+                    })
+                });
+
+                const sonuc = await response.json().catch(() => null);
+
+                if (!response.ok) {
+                    throw new Error((sonuc && (sonuc.mesaj || sonuc.detail)) || "Güncelleme sırasında hata oluştu.");
+                }
+
+                // LocalStorage'ı Yeni Bilgilerle Eşitle
+                user.uye_ad = ad;
+                user.ad = ad;
+                user.uye_soyad = soyad;
+                user.soyad = soyad;
+                user.uye_eposta = eposta;
+                user.eposta = eposta;
+                user.telefon = telefon;
+
+                localStorage.setItem("aktifKullanici", JSON.stringify(user));
+
+                // Arayüz metinlerini ve avatarları anında yenile
+                bilgileriYukle();
+
+                alert("Bilgileriniz başarıyla güncellendi.");
+
+            } catch (error) {
+                console.error("Güncelleme Hatası:", error);
+                alert(`Hata: ${error.message}`);
+            }
+        }
+
+        // =========================================================
+        // E. ADRES İŞLEMLERİ (EKLEME, LİSTELEME, SİLME)
+        // =========================================================
+
+        /**
+         * Kullanıcıya özel anahtar altına yeni adres nesnesi ekler.
+         */
+        function yeniAdresEkle(e) {
+            e.preventDefault();
+            const uyeId = aktifUyeIdGetir();
+            if (!uyeId) {
+                alert("Adres eklemek için giriş yapınız.");
+                return;
+            }
+
+            const baslikInput = document.getElementById("adres-baslik");
+            const acikInput = document.getElementById("adres-acik");
+
+            const baslik = baslikInput.value.trim();
+            const acik = acikInput.value.trim();
+
+            if (!baslik || !acik) {
+                alert("Lütfen tüm alanları doldurun.");
+                return;
+            }
+
+            const ozelKey = `kullanici_adresleri_${uyeId}`;
+            let adresler = [];
+            try {
+                adresler = JSON.parse(localStorage.getItem(ozelKey)) || [];
+            } catch (e) {
+                adresler = [];
+            }
+
+            const yeniAdres = {
+                id: "addr_" + Date.now().toString(),
+                baslik: baslik,
+                acik: acik
+            };
+
+            adresler.push(yeniAdres);
+            localStorage.setItem(ozelKey, JSON.stringify(adresler));
+
+            baslikInput.value = "";
+            acikInput.value = "";
+            alert("Yeni adresiniz kaydedildi.");
+            adresleriListele();
+        }
+
+        /**
+         * Kayıtlı adresleri DOM'daki 'kayitli-adresler-listesi' kapsayıcısına render eder.
+         */
+        async function adresleriListele() {
+            const liste = document.getElementById("kayitli-adresler-listesi");
+            const uyeId = aktifUyeIdGetir();
+
+            if (!liste) return;
+            if (!uyeId) {
+                liste.innerHTML = `<div style="color: #94a3b8; font-size: 14px;">Adreslerinizi görüntülemek için lütfen giriş yapınız.</div>`;
+                return;
+            }
+
+            const ozelKey = `kullanici_adresleri_${uyeId}`;
+            let adresler = [];
+
+            try {
+                adresler = JSON.parse(localStorage.getItem(ozelKey)) || [];
+            } catch (e) {
+                adresler = [];
+            }
+
+            if (adresler.length === 0) {
+                liste.innerHTML = `<div style="color: #94a3b8; font-size: 14px;">Kayıtlı adres bulunamadı. Aşağıdan yeni adres ekleyebilirsiniz.</div>`;
+                return;
+            }
+
+            liste.innerHTML = adresler.map(a => `
+        <div class="adres-karti" id="kart-${a.id}">
+            <div>
+                <div class="adres-karti-baslik">🏠 ${a.baslik}</div>
+                <div class="adres-karti-metin">${a.acik}</div>
+            </div>
+            <button type="button" class="adres-sil-btn" onclick="adresSil('${a.id}')">Sil</button>
+        </div>
+    `).join("");
+        }
+
+        // Global erişim için window nesnesine bağlayalım
+        window.adresleriListele = adresleriListele;
+
+        /**
+         * Belirtilen ID'ye sahip adresi listeden çıkarır ve localStorage'ı günceller.
+         */
+        // Kesin Silme Fonksiyonu
+        // Kesin ve Temiz Silme Fonksiyonu
+        function adresSil(id) {
+            if (!confirm("Bu adresi silmek istediğinize emin misiniz?")) return;
+
+            const uyeId = aktifUyeIdGetir();
+            if (!uyeId) {
+                alert("Oturum bilgisi bulunamadı.");
+                return;
+            }
+
+            const ozelKey = `kullanici_adresleri_${uyeId}`;
+            let adresler = [];
+            try {
+                adresler = JSON.parse(localStorage.getItem(ozelKey)) || [];
+            } catch (e) {
+                adresler = [];
+            }
+
+            // Silinecek adresi bul
+            const silinecek = adresler.find(a => String(a.id) === String(id));
+
+            // Listeden çıkar
+            const guncelListe = adresler.filter(a => String(a.id) !== String(id));
+            localStorage.setItem(ozelKey, JSON.stringify(guncelListe));
+
+            // Varsa hafızada seçili kalmış adresleri de temizle
+            localStorage.removeItem("kullanici_adresleri");
+            localStorage.removeItem("secili_adres");
+            localStorage.removeItem("siparis_adresi");
+
+            adresleriListele();
+        }
+
+        window.adresSil = adresSil;
+
+        // =========================================================
+        // F. ŞİFRE DEĞİŞTİRME MOTORU (API ENTEGRASYONLU)
+        // =========================================================
+
+        /**
+         * 3. Şifre Değiştirme
+         * Mevcut şifreyi doğrular, yeni şifre kurallarını kontrol eder ve /api/kullanici/sifre-degistir endpoint'ine POST atar.
+         */
+        // 3. Şifre Değiştirme
+        // Şifre Değiştirme Fonksiyonu (API Entegrasyonlu)
+        async function sifreDegistir(e) {
+            e.preventDefault();
+
+            const uyeId = aktifUyeIdGetir();
+            if (!uyeId) {
+                alert("Oturum bilgisi bulunamadı. Lütfen tekrar giriş yapın.");
+                window.location.href = "uye.html";
+                return;
+            }
+
+            const mevcutSifre = document.getElementById("mevcut-sifre").value.trim();
+            const yeniSifre = document.getElementById("yeni-sifre").value.trim();
+            const yeniSifreTekrar = document.getElementById("yeni-sifre-tekrar").value.trim();
+
+            // Ön doğrulamalar
+            if (!mevcutSifre || !yeniSifre || !yeniSifreTekrar) {
+                alert("Lütfen tüm alanları doldurun.");
+                return;
+            }
+
+            if (yeniSifre !== yeniSifreTekrar) {
+                alert("Yeni şifre ile şifre tekrarı birbiriyle eşleşmiyor!");
+                return;
+            }
+
+            if (yeniSifre.length < 6) {
+                alert("Yeni şifreniz en az 6 karakter olmalıdır.");
+                return;
+            }
+
+            if (mevcutSifre === yeniSifre) {
+                alert("Yeni şifreniz mevcut şifrenizle aynı olamaz.");
+                return;
+            }
+
+            try {
+                const response = await fetch("http://localhost:5192/api/kullanici/sifre-degistir", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        uye_id: uyeId,
+                        mevcut_sifre: mevcutSifre,
+                        yeni_sifre: yeniSifre
+                    })
+                });
+
+                const sonuc = await response.json().catch(() => null);
+
+                if (!response.ok) {
+                    throw new Error((sonuc && (sonuc.mesaj || sonuc.detail)) || "Şifre güncellenemedi.");
+                }
+
+                alert("🔒 Şifreniz başarıyla değiştirildi.");
+                document.getElementById("form-sifre-degistir").reset();
+
+            } catch (error) {
+                console.error("Şifre Değiştirme Hatası:", error);
+                alert(`Hata: ${error.message}`);
+            }
+        }
+
+        window.sifreDegistir = sifreDegistir;
+
+        // =========================================================
+        // G. OTURUM KAPATMA (LOGOUT)
+        // =========================================================
+
+        // Çıkış İşlemleri
+        const cikisYap = (e) => {
+            e.preventDefault();
+            localStorage.removeItem("aktifKullanici");
+            window.location.href = "index.html";
+        };
+
+        document.getElementById("profile-logout-btn")?.addEventListener("click", cikisYap);
+        document.getElementById("logout-btn")?.addEventListener("click", cikisYap);
+
+        // Sayfa yüklendiğinde kullanıcı bilgilerini doldur
+        document.addEventListener("DOMContentLoaded", bilgileriYukle);
+
+        // =========================================================
+        // H. ÇİFT ONAYLI VE GÜVENLİ HESAP SİLME MOTORU (SWEETALERT2)
+        // =========================================================
+
+        /**
+         * Kullanıcıdan e-posta ve şifre alarak kimlik doğrulaması yapar,
+         * ardından /api/kullanici/sil endpoint'ine istek gönderip hesabı pasife alır.
+         */
+        // Üyelik ve Hesap Silme Fonksiyonu (E-Posta + Şifre Doğrulamalı ve Çift Onaylı)
+        async function hesabiSil() {
+            const user = aktifKullaniciGetir();
+            const uyeId = aktifUyeIdGetir();
+
+            if (!user || !uyeId) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oturum Bulunamadı",
+                    text: "İşlem yapabilmek için lütfen tekrar giriş yapın."
+                });
+                return;
+            }
+
+            // 1. Adım: Kullanıcıdan E-Posta ve Şifre İste (SweetAlert Modal)
+            const { value: formDegerleri } = await Swal.fire({
+                title: "Hesabınızı Silmek Üzeresiniz",
+                html: `
+            <p style="font-size: 13px; color: #64748b; margin-bottom: 15px;">
+                Güvenliğiniz için lütfen kayıtlı e-posta adresinizi ve şifrenizi girin.
+            </p>
+            <input id="swal-eposta" type="email" class="swal2-input" placeholder="E-Posta Adresiniz" style="width: 80%;">
+            <input id="swal-sifre" type="password" class="swal2-input" placeholder="Şifreniz" style="width: 80%;">
+        `,
+                focusConfirm: false,
+                showCancelButton: true,
+                confirmButtonText: "Devam Et",
+                cancelButtonText: "Vazgeç",
+                confirmButtonColor: "#dc2626",
+                cancelButtonColor: "#64748b",
+                preConfirm: () => {
+                    const eposta = document.getElementById("swal-eposta").value.trim();
+                    const sifre = document.getElementById("swal-sifre").value.trim();
+
+                    if (!eposta || !sifre) {
+                        Swal.showValidationMessage("Lütfen hem e-posta adresinizi hem de şifrenizi girin!");
+                        return false;
+                    }
+                    return { eposta, sifre };
+                }
+            });
+
+            if (!formDegerleri) return; // Kullanıcı vazgeçtiyse çık
+
+            // 2. Adım: "Emin misiniz?" Son Onay Kutusu
+            const onay = await Swal.fire({
+                title: "Emin misiniz?",
+                text: "Hesabınız, kayıtlı adresleriniz ve tüm geçmişiniz kalıcı olarak silinecektir. Bu işlem geri alınamaz!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#dc2626",
+                cancelButtonColor: "#64748b",
+                confirmButtonText: "Evet, Hesabımı Kalıcı Olarak Sil",
+                cancelButtonText: "İptal Et"
+            });
+
+            if (!onay.isConfirmed) return; // Kullanıcı onaylamadıysa çık
+
+            // 3. Adım: Backend API'ye Silme İsteği Gönder
+            try {
+                Swal.fire({
+                    title: "Hesabınız Siliniyor...",
+                    text: "Lütfen bekleyiniz.",
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                const response = await fetch("http://localhost:5192/api/kullanici/sil", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        uye_id: uyeId,
+                        eposta: formDegerleri.eposta,
+                        sifre: formDegerleri.sifre
+                    })
+                });
+
+                const sonuc = await response.json().catch(() => null);
+
+                if (!response.ok) {
+                    throw new Error((sonuc && (sonuc.mesaj || sonuc.detail)) || "Hesap silme işlemi başarısız oldu.");
+                }
+
+                // 4. Adım: Kullanıcıya Ait Tüm LocalStorage Verilerini Temizle
+                localStorage.removeItem("aktifKullanici");
+                localStorage.removeItem(`kullanici_adresleri_${uyeId}`);
+                localStorage.removeItem(`sepet_${uyeId}`);
+                localStorage.removeItem("sepet");
+                localStorage.removeItem("sepetim");
+                localStorage.removeItem("kullanici_adresleri");
+
+                // 5. Adım: Başarı Bildirimi ve Anasayfaya Yönlendirme
+                await Swal.fire({
+                    icon: "success",
+                    title: "Hesabınız Silindi",
+                    text: "Üyeliğiniz ve veritabanındaki tüm bilgileriniz başarıyla silindi. Anasayfaya yönlendiriliyorsunuz...",
+                    timer: 2500,
+                    showConfirmButton: false
+                });
+
+                window.location.href = "index.html";
+
+            } catch (error) {
+                console.error("Hesap Silme Hatası:", error);
+                Swal.fire({
+                    icon: "error",
+                    title: "Hata",
+                    text: error.message
+                });
+            }
+        }
+
+        window.hesabiSil = hesabiSil;
+    </script>
+</body>
+
+</html>

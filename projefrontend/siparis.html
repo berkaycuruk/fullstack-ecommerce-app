@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <!-- Karakter kodlaması ve mobil cihazlar için responsive görünüm ayarları -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Siparişlerim</title>
+    <!-- Genel tema stil dosyası bağlantısı -->
+    <link rel="stylesheet" href="../style.css">
+
+    <!-- ========================================================================= -->
+    <!-- SİPARİŞ KARTLARI, ÜRÜN LİSTELERİ VE DURUM ROZETLERİ İÇİN SAYFA STİLLERİ -->
+    <!-- ========================================================================= -->
+    <style>
+        .container {
+            max-width: 950px;
+            margin: 0 auto;
+        }
+
+        .siparis-karti {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .siparis-ust {
+            background-color: #f1f5f9;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        .siparis-ust b {
+            color: #1e293b;
+        }
+
+        .siparis-govde {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        .urunler-listesi {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .urun-satir {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 1px dashed #f1f5f9;
+            padding-bottom: 12px;
+        }
+
+        .urun-satir:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .urun-resim {
+            width: 75px;
+            height: 75px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            background-color: #fafafa;
+        }
+
+        .urun-detay {
+            flex: 1;
+        }
+
+        .urun-ad {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 4px;
+        }
+
+        .urun-adet {
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        .urun-fiyat {
+            font-size: 15px;
+            font-weight: 600;
+            color: #334155;
+            white-space: nowrap;
+        }
+
+        .siparis-ozet {
+            width: 160px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-left: 1px solid #e2e8f0;
+            padding-left: 20px;
+        }
+
+        .toplam-fiyat-kutusu {
+            text-align: right;
+        }
+
+        .toplam-etiket {
+            text-align: end;
+            font-weight: 700;
+            font-size: 15px;
+            color: #64748b;
+            margin-bottom: 4px;
+        }
+
+        .toplam-deger {
+            text-align: end;
+            font-size: 22px;
+            font-weight: 700;
+            color: #e11d48;
+        }
+
+        .adres-kutusu {
+            text-align: center;
+            margin-top: 25px;
+            background: #f8fafc;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #f1f5f9;
+        }
+
+        .adres-baslik {
+            font-size: 12px;
+            font-weight: 600;
+            color: #475569;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .adres-metin {
+            font-size: 13px;
+            color: #64748b;
+            line-height: 1.4;
+            word-break: break-word;
+        }
+
+        .mesaj-kutusu {
+            background: #fff;
+            padding: 40px 20px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            text-align: center;
+            color: #64748b;
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ========================================================================= -->
+    <!-- 1. ÜST KAMPANYA VE DUYURU BANNERI -->
+    <!-- ========================================================================= -->
+    <header>
+        <img class="header-img"
+            src="https://i.dr.com.tr/pimages/Content/Uploads/BannerFiles/dr/2026-TEMMUZ-SERINLETEN-URUNLER-HELLO-BAR1140X60.webp"
+            alt="Banner">
+    </header>
+
+    <!-- ========================================================================= -->
+    <!-- 2. ANA HEADER (LOGO, ARAMA FORMU, İNDİRİMLER VE KULLANICI DROPDOWN MENÜSÜ) -->
+    <!-- ========================================================================= -->
+    <header class="header1">
+        <!-- Logo alanı: Ana sayfaya yönlendirir -->
+        <div class="logo">
+            <a href="index.html">
+                <img class="logo_img" src="/image/logo.jpg" alt="Logo">
+            </a>
+        </div>
+
+        <!-- Ürün Arama Çubuğu: Backend /api/genel endpoint'ine GET isteği atar -->
+        <div class="search-box">
+            <form class="search-container" action="http://localhost:5192/api/genel" method="GET" role="search">
+                <div class="search-input-wrapper">
+                    <input type="search" class="search-input" name="kelime"
+                        placeholder="Ürün, kategori veya marka arayın..." maxlength="60" autocomplete="off"
+                        aria-label="Ürün arama" />
+                </div>
+                <button type="submit" class="search-submit-btn">Ara</button>
+            </form>
+        </div>
+
+        <!-- İndirimli ürünleri filtreleyen buton (script.js üzerinden tetiklenir) -->
+        <span><button class="search-discount" type="button" onclick="indirimliUrunleriGetir()">İndirimli
+                Ürünler</button></span>
+
+        <!-- Kullanıcı Durum & Aksiyon Menüsü -->
+        <div class="header1-actions">
+
+            <!-- Ziyaretçi Giriş/Kayıt Butonu (Kullanıcı giriş yaptığında 'd-none' eklenir) -->
+            <a href="uye.html" class="header1-item" id="nav-login-btn">
+                <span class="icon">👤</span>
+                <span>Giriş Yap/Kayıt Ol</span>
+            </a>
+
+            <!-- Aktif Kullanıcı Profil Menüsü (Oturum açıkken 'd-none' kaldırılır) -->
+            <div class="header1-item user-dropdown d-none" id="user-menu">
+                <div class="user-dropdown-trigger">
+                    <span class="icon">👤</span>
+                    <span>Hesabım</span>
+                </div>
+                <div class="dropdown-content">
+                    <div class="user-info-row">
+                        <!-- Kullanıcı baş harfleri avatarı -->
+                        <div class="user-avatar" id="user-avatar-badge">BÇ</div>
+                        <div class="user-details">
+                            <span class="greeting">Merhaba</span>
+                            <!-- Kullanıcı tam adı dinamik basılır -->
+                            <span class="user-fullname" id="user-fullname">Berkay ÇÜRÜK</span>
+                        </div>
+                    </div>
+                    <hr class="dropdown-divider">
+
+                    <!-- Kullanıcı profil/adres yönetim linki -->
+                    <a href="hesabim.html" class="dropdown-menu-item"
+                        style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; text-decoration: none; color: #334155; font-size: 14px; border-radius: 6px; transition: background-color 0.2s;">
+                        <span>👤</span>
+                        <span>Hesabım</span>
+                    </a>
+
+                    <hr class="dropdown-divider">
+
+                    <!-- Siparişlerim sayfası linki -->
+                    <a href="siparis.html" class="dropdown-menu-item"
+                        style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; text-decoration: none; color: #334155; font-size: 14px; border-radius: 6px; transition: background-color 0.2s;">
+                        <span>📦</span>
+                        <span>Siparişlerim</span>
+                    </a>
+
+                    <hr class="dropdown-divider">
+                    <!-- Oturumu kapatıp localStorage'ı temizleyen buton -->
+                    <button id="logout-btn" class="logout-link" type="button">Çıkış Yap</button>
+                </div>
+            </div>
+
+            <!-- Favorilerim Kısayolu -->
+            <a href="favoriler.html" class="header1-item">
+                <span class="icon">♡</span>
+                <span>Favoriler</span>
+            </a>
+
+            <!-- Sepetim Kısayolu -->
+            <a href="sepet.html" class="header1-item">
+                <span class="icon">🛒</span>
+                <span>Sepetim</span>
+            </a>
+
+        </div>
+    </header>
+
+    <!-- Kategori Menü Butonları -->
+    <div class="kategori-div">
+        <span><button class="kategori" type="button"><a href='../kitaplar.html'>Kitaplar</a></button></span>
+        <span><button class="kategori" type="button"><a href='../elektronik.html'>Elektronik</a></button></span>
+        <span><button class="kategori" type="button"><a href='../hobi.html'>Hobi</a></button></span>
+        <span><button class="kategori" type="button"><a href='../kirtasiye.html'>Kırtasiye</a></button></span>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- 3. ANA DÜZEN (SOL PROFİL MENÜSÜ + SAĞ GEÇMİŞ SİPARİŞLER LİSTESİ) -->
+    <!-- ========================================================================= -->
+    <main class="page-container">
+        <!-- SOL PANEL: Profil kartı ve hesap navigasyonu -->
+        <aside class="sidebar-wrapper" style="width: 500px;">
+            <div class="dr-account-card" id="user-profile-menu">
+                <div class="user-header">
+                    <div class="user-avatar-sq" id="menu-avatar-badge">BÇ</div>
+                    <div class="user-text-info">
+                        <span class="greeting-text">Merhaba,</span>
+                        <strong class="user-fullname-text" id="menu-fullname">Kullanıcı Adı</strong>
+                    </div>
+                </div>
+
+                <ul class="account-menu-list">
+                    <li>
+                        <!-- Aktif sayfa vurgusu (active-link) -->
+                        <a href="siparis.html" class="menu-link active-link"><span>Siparişlerim</span>
+                            <span class="arrow-icon">›</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="favoriler.html" class="menu-link">
+                            <span>Favorilerim</span>
+                        </a>
+                    </li>
+                    <li><a href="#" class="menu-link">Değerlendirmelerim</a></li>
+                    <li>
+                        <a href="#" class="menu-link">
+                            <span>Kitaplığım</span>
+                        </a>
+                    </li>
+                    <li><a href="#" class="menu-link">Hediye Kartlarım</a></li>
+                </ul>
+
+                <div class="logout-wrapper">
+                    <button type="button" class="red-logout-btn" id="profile-logout-btn">Çıkış Yap</button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- SAĞ PANEL: SQL Veritabanından Gelen Sipariş Kartlarının Render Edildiği Alan -->
+        <div class="container">
+            <h2>Siparişlerim</h2>
+            <!-- siparisleriGetir() fonksiyonunun sipariş kartlarını basacağı ana kapsayıcı div -->
+            <div id="siparisListesi"></div>
+        </div>
+    </main>
+
+    <!-- Dinamik Arama ve İndirim Grid Alanları -->
+    <div class="products-grid" id="aramaSonuclari"></div>
+    <div class="products-grid" id="indirimliGrid"></div>
+
+    <!-- ========================================================================= -->
+    <!-- 4. SİPARİŞ LİSTELEME, SÜRE HESAPLAMA VE İPTAL/İADE JAVASCRIPT MOTORU -->
+    <!-- ========================================================================= -->
+    <script>
+        /**
+         * Ödeme tamamlandıktan sonra URL'e eklenen '?clearCart=true' parametresini kontrol eder;
+         * başarılı ödeme sonrası sepet anahtarlarını temizleyip parametreyi URL'den kaldırır.
+         */
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('clearCart') === 'true') {
+                Object.keys(localStorage).forEach(k => {
+                    if (k.startsWith('sepet') || k.startsWith('cart')) {
+                        localStorage.removeItem(k);
+                    }
+                });
+
+                // Sayfayı yeniden yüklemeden URL parametresini temizleme
+                // Remove parameter from URL without reloading the page
+                const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+                window.history.replaceState({ path: newUrl }, '', newUrl);
+            }
+        });
+
+        // =========================================================
+        // HIZLI ARAMA MOTORU
+        // =========================================================
+
+        document.querySelectorAll(".arama-butonu").forEach(buton => {
+            buton.addEventListener("click", async function (e) {
+                e.preventDefault();
+                const kelime = this.dataset.kelime;
+
+                const aramaGrid = document.getElementById("aramaSonuclari");
+                const elektronikGrid = document.getElementById("elektronikGrid");
+                const kitaplarGrid = document.getElementById("kitaplarGrid");
+                const hobiGrid = document.getElementById("hobi");
+                const kirtasiyeGrid = document.getElementById("kirtasiye");
+                const pagination = document.getElementById("pagination");
+
+                // Normal ürünleri ve sayfalamayı gizle
+                if (elektronikGrid) elektronikGrid.style.display = "none";
+                if (kitaplarGrid) kitaplarGrid.style.display = "none";
+                if (hobiGrid) hobiGrid.style.display = "none";
+                if (kirtasiyeGrid) kirtasiyeGrid.style.display = "none";
+                if (pagination) pagination.style.display = "none";
+
+                aramaGrid.style.display = "grid";
+                aramaGrid.innerHTML = "";
+
+                try {
+                    const response = await fetch(`http://localhost:5192/api/genel?kelime=${encodeURIComponent(kelime)}`);
+                    if (!response.ok) throw new Error("API isteği başarısız");
+
+                    const urunler = await response.json();
+
+
+                    window.sonAramaUrunleri = urunler;
+
+
+                    seciliMarkalar = [];
+                    document.querySelectorAll("input[data-marka]").forEach(cb => cb.checked = false);
+
+                    if (urunler.length === 0) {
+                        aramaGrid.innerHTML = "<p>Ürün bulunamadı.</p>";
+                        return;
+                    }
+
+                    urunler.forEach(urun => ekranaKartBas(urun, aramaGrid));
+
+                } catch (error) {
+                    console.error("Hata:", error);
+                }
+            });
+        });
+
+        /**
+         * Arama sonucu gelen ürün kartlarını DOM'a ekleyen yardımcı fonksiyon.
+         */
+        function ekranaKartBas(urun, container) {
+            const kart = document.createElement("div");
+            kart.className = "product-card";
+
+            kart.addEventListener("click", function () {
+
+                console.log("KARTA TIKLANDI");
+                console.log("Fotolink:", urun.fotolink);
+
+                const fotolink = encodeURIComponent(urun.fotolink);
+
+                window.location.href = `urun-detay.html?fotolink=${fotolink}`;
+            });
+
+            const fiyatHTML = urun.indirimlifiyat != null
+                ? `<span class="indirimli-fiyat">${urun.indirimlifiyat} TL</span>
+           <span class="normal-fiyat">${urun.fiyati} TL</span>`
+                : `<span class="indirimli-fiyat">${urun.fiyati} TL</span>`;
+
+            kart.innerHTML = `
+        <div class="product-image">
+            <img src="${urun.fotolink}" alt="${urun.urun_adi}">
+        </div>
+        <div class="product-info">
+            <div class="product-name">${urun.urun_adi}</div>
+            <div class="product-publisher">${urun.marka ?? ""}</div>
+            
+            <div class="product-price">${fiyatHTML} </div>
+           <div class="icon1" onclick = "sepeteEkle('${urun.fotolink}', '${urun.urun_adi}', '${urun.fiyati}', '${urun.indirimlifiyat}', this, event)" style = "cursor: pointer;" >
+        <span>🛒</span>
+</div> 
+        </div>
+        <div class="product-rating">
+            ⭐ ${urun.yildiz_sayisi}
+        </div>
+        <div class="product-fav" onclick = "favEkle('${urun.fotolink}', '${urun.urun_adi}', '${urun.fiyati}', '${urun.indirimlifiyat}', this, event)" style = "cursor: pointer;">
+        <span>♡</span></div>
+    `;
+            container.appendChild(kart);
+        }
+
+        // Global arama formu dinleyicisi
+        const searchForm = document.querySelector(".search-container");
+
+        if (searchForm) {
+            searchForm.addEventListener("submit", async function (e) {
+
+                // Formun yeni sayfaya gitmesini engelle
+                e.preventDefault();
+
+                const input = searchForm.querySelector(".search-input");
+                const kelime = input.value.trim();
+
+                if (!kelime) {
+                    return;
+                }
+
+                const aramaGrid = document.getElementById("aramaSonuclari");
+                const elektronikGrid = document.getElementById("elektronikGrid");
+                const kitaplarGrid = document.getElementById("kitaplarGrid");
+                const hobiGrid = document.getElementById("hobi");
+                const kirtasiyeGrid = document.getElementById("kirtasiye");
+                const pagination = document.getElementById("pagination");
+
+                try {
+
+                    // API'ye istek at
+                    const response = await fetch(
+                        `http://localhost:5192/api/genel?kelime=${encodeURIComponent(kelime)}`
+                    );
+
+                    if (!response.ok) {
+                        throw new Error("API isteği başarısız oldu.");
+                    }
+
+                    const urunler = await response.json();
+
+                    console.log("Arama sonuçları:", urunler);
+
+                    // Arama sonuçlarını hafızaya al
+                    window.sonAramaUrunleri = urunler;
+
+                    // Normal ürün listelerini gizle
+                    if (elektronikGrid) elektronikGrid.style.display = "none";
+                    if (kitaplarGrid) kitaplarGrid.style.display = "none";
+                    if (hobiGrid) hobiGrid.style.display = "none";
+                    if (kirtasiyeGrid) kirtasiyeGrid.style.display = "none";
+
+                    // Sayfalamayı gizle
+                    if (pagination) pagination.style.display = "none";
+
+                    // Arama sonuçlarını göster
+                    if (aramaGrid) {
+                        aramaGrid.style.display = "grid";
+                        aramaGrid.innerHTML = "";
+
+                        if (urunler.length === 0) {
+                            aramaGrid.innerHTML = `
+                        <p style="grid-column: 1 / -1;">
+                            "${kelime}" için ürün bulunamadı.
+                        </p>
+                    `;
+                            return;
+                        }
+
+                        // Ürünleri ekrana bas
+                        urunler.forEach(urun => {
+                            ekranaKartBas(urun, aramaGrid);
+                        });
+                    }
+
+                } catch (error) {
+                    console.error("Arama hatası:", error);
+
+                    if (aramaGrid) {
+                        aramaGrid.style.display = "grid";
+                        aramaGrid.innerHTML = `
+                    <p style="grid-column: 1 / -1;">
+                        Arama sırasında bir hata oluştu.
+                    </p>
+                `;
+                    }
+                }
+            });
+        }
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof kullaniciDurumunuKontrolEt === 'function') {
+                kullaniciDurumunuKontrolEt();
+            }
+        });
+
+        // =========================================================
+        // YARDIMCI FORMAT VE KULLANICI FONKSİYONLARI
+        // =========================================================
+
+        /**
+         * Karışık formatlarda gelebilen fiyat stringlerini temiz float sayıya çevirir.
+         */
+        function fiyatAyristir(deger) {
+            if (deger === null || deger === undefined) return null;
+            let str = String(deger).trim();
+            if (!str || str.toLowerCase() === "null" || str.toLowerCase() === "undefined" || str === "0") return null;
+
+            str = str.replace(/[^\d.,]/g, "");
+
+            if (str.includes(".") && str.includes(",")) {
+                str = str.replace(/\./g, "").replace(",", ".");
+            }
+            else if ((str.match(/\./g) || []).length > 1) {
+                const parts = str.split(".");
+                const kurus = parts.pop();
+                str = parts.join("") + "." + kurus;
+            }
+            else if ((str.match(/,/g) || []).length > 1) {
+                const parts = str.split(",");
+                const kurus = parts.pop();
+                str = parts.join("") + "." + kurus;
+            }
+            else if (str.includes(",")) {
+                str = str.replace(",", ".");
+            }
+
+            const num = parseFloat(str);
+            return isNaN(num) || num <= 0 ? null : num;
+        }
+
+        /**
+         * Sayısal tutarı Türkiye para birimi (₺) formatında metne dönüştürür.
+         */
+        function formatTL(tutar) {
+            const sayi = Number(tutar) || 0;
+            return sayi.toLocaleString("tr-TR", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }) + " ₺";
+        }
+
+        /**
+         * LocalStorage'dan aktif kullanıcı nesnesini okur.
+         */
+        function aktifKullaniciGetir() {
+            const raw = localStorage.getItem("aktifKullanici");
+            if (!raw) return null;
+
+            try {
+                const user = JSON.parse(raw);
+                return {
+                    uye_id: user.uye_id || user.id,
+                    ad: user.uye_ad || user.ad || "",
+                    soyad: user.uye_soyad || user.soyad || ""
+                };
+            } catch (e) {
+                console.error("Kullanıcı verisi okunamadı:", e);
+                return null;
+            }
+        }
+
+        // =========================================================
+        // SİPARİŞ DURUM TESPİTİ VE İPTAL / İADE MOTORU
+        // =========================================================
+
+        /**
+         * 1. Süreye ve hafızaya göre durumu belirleyen yardımcı fonksiyon
+         * Sipariş verildiği andan itibaren geçen süreye (dakika) göre dinamik sipariş durumu üretir.
+         */
+        // 1. Süreye ve hafızaya göre durumu belirleyen yardımcı fonksiyon
+        function siparisDurumuGetir(tarihStr, siparisId) {
+            // Kullanıcı manuel iptal/iade yaptıysa öncelikle onu döner
+            const kayitliDurum = localStorage.getItem("siparis_durum_" + siparisId);
+            if (kayitliDurum) return kayitliDurum;
+
+            const siparisZamani = new Date(tarihStr).getTime();
+            const suAn = new Date().getTime();
+            const gecenDakika = (suAn - siparisZamani) / (1000 * 60);
+
+            // Zaman bazlı otomatik sipariş durum simülasyonu
+            if (gecenDakika < 5) {
+                return "Siparişiniz Alındı";
+            }
+            else if (gecenDakika < 30) {
+                return "Hazırlanıyor";
+            } else if (gecenDakika < 60) {
+                return "Kargoya Verildi";
+            } else {
+                return "Siparişiniz Teslim Edildi";
+            }
+        }
+
+        /**
+         * Siparişin anlık durumuna göre İptal veya İade sürecini yönetir ve localStorage'da saklar.
+         */
+        function siparis_iptal_iade(siparis_id, mevcutDurum) {
+            if (mevcutDurum === "İptal Edildi" || mevcutDurum === "İade Edildi") {
+                alert(`Bu sipariş zaten ${mevcutDurum.toLowerCase()} durumundadır.`);
+                return;
+            }
+
+            if (mevcutDurum === "Hazırlanıyor" || mevcutDurum === "Siparişiniz Alındı") {
+                if (!confirm("Siparişiniz hazırlanma aşamasında. İptal etmek istiyor musunuz?")) return;
+                localStorage.setItem("siparis_durum_" + siparis_id, "İptal Edildi");
+                alert("Siparişiniz başarıyla iptal edildi.");
+                window.location.reload();
+            } else {
+                if (!confirm("Siparişiniz için iade talebi oluşturmak istiyor musunuz?")) return;
+                localStorage.setItem("siparis_durum_" + siparis_id, "İade Edildi");
+                alert("İade talebiniz başarıyla oluşturuldu.");
+                window.location.reload();
+            }
+        }
+
+        // =========================================================
+        // SİPARİŞLERİ BACKEND API'DEN ÇEKME VE RENDER MOTORU
+        // =========================================================
+
+        /**
+         * 3. Siparişleri getiren ana fonksiyon
+         * /api/siparislerim endpoint'ine aktif üye ID'si ile istek atıp JSON'u sipariş kartlarına dönüştürür.
+         */
+        // 3. Siparişleri getiren ana fonksiyon
+        async function siparisleriGetir() {
+            const siparisKonteyner = document.getElementById("siparisListesi");
+            const aktifKullanici = aktifKullaniciGetir();
+
+            if (!aktifKullanici || !aktifKullanici.uye_id) {
+                siparisKonteyner.innerHTML = `
+            <div class="mesaj-kutusu">
+                <p>Siparişlerinizi görüntülemek için lütfen giriş yapınız.</p>
+            </div>`;
+                return;
+            }
+
+            siparisKonteyner.innerHTML = `<div class="mesaj-kutusu"><p>Siparişleriniz yükleniyor...</p></div>`;
+
+            try {
+                // Backend'den kullanıcının sipariş geçmişini çekiyoruz
+                const response = await fetch(`http://localhost:5192/api/siparislerim?uyeId=${aktifKullanici.uye_id}`);
+                if (!response.ok) throw new Error("Siparişler alınamadı.");
+
+                const siparisler = await response.json();
+
+                if (!siparisler || siparisler.length === 0) {
+                    siparisKonteyner.innerHTML = `
+                <div class="mesaj-kutusu">
+                    <p>Henüz verilmiş bir siparişiniz bulunmamaktadır.</p>
+                </div>`;
+                    return;
+                }
+
+                siparisKonteyner.innerHTML = "";
+
+                const alici_adi = `${aktifKullanici.ad} ${aktifKullanici.soyad.toUpperCase()}`.trim();
+
+                siparisler.forEach((siparis) => {
+                    let urunListesi = [];
+                    try {
+                        // SQL'de string olarak saklanan 'urunler' JSON alanını parse etme
+                        urunListesi = typeof siparis.urunler === "string" ? JSON.parse(siparis.urunler) : siparis.urunler;
+                    } catch (e) {
+                        console.error("Ürünler JSON parse hatası:", e);
+                    }
+
+                    let count = 0;
+                    let indirimsiztoplam = 0;
+                    let urunlerHtml = "";
+
+                    // Sipariş içerisindeki ürün satırlarını oluşturma
+                    if (Array.isArray(urunListesi)) {
+                        urunlerHtml = urunListesi.map((u) => {
+                            let normalFiyat = fiyatAyristir(u.fiyati ?? u.fiyat);
+                            let indirimliFiyat = fiyatAyristir(u.indirimlifiyat ?? u.indirimli_fiyat);
+                            let adetSayisi = Number(u.adet) || 1;
+
+                            indirimsiztoplam += (normalFiyat !== null ? normalFiyat : 0) * adetSayisi;
+                            count += adetSayisi;
+
+                            let fiyatGosterim = "";
+                            if (indirimliFiyat !== null) {
+                                fiyatGosterim = `
+                            <div style="display: flex; flex-direction: column; align-items: flex-end;">
+                                <span style="color: #e11d48; font-weight: 700; font-size: 15px;">${formatTL(indirimliFiyat)}</span>
+                                ${normalFiyat !== null ? `<span style="text-decoration: line-through; color: #94a3b8; font-size: 12px;">${formatTL(normalFiyat)}</span>` : ""}
+                            </div>
+                        `;
+                            } else {
+                                let gecerliFiyat = normalFiyat !== null ? normalFiyat : 0;
+                                fiyatGosterim = `<div class="urun-fiyat">${formatTL(gecerliFiyat)}</div>`;
+                            }
+
+                            return `
+                            <span style=" margin-bottom: 0px; font-size: 14px; display:flex; flex-direction:column; align-items:flex-end;"><strong>Birim Fiyatı:</strong> </span>
+                        <div class="urun-satir">
+                            <img class="urun-resim" src="${u.fotolink || u.resim || 'https://via.placeholder.com/80'}" alt="${u.urun_adi || u.ad || 'Ürün'}" />
+                            <div class="urun-detay">
+                                <div class="urun-ad">${u.urun_adi || u.ad || 'İsimsiz Ürün'}</div>
+                                <div class="urun-adet">Adet: ${adetSayisi}</div>
+                            </div>
+                            
+                            ${fiyatGosterim}
+                        </div>
+                    `;
+                        }).join("");
+                    }
+
+                    // Durum tespiti ve dinamik durum rozeti renk belirleme
+                    // Durum tespiti ve renk belirleme
+                    const durum = siparisDurumuGetir(siparis.siparis_tarihi, siparis.siparis_id);
+                    let durumRenk = "#d97706"; // Hazırlanıyor: Turuncu
+                    if (durum === "Siparişiniz Alındı") durumRenk = "#0d9488"; // Turkuaz
+                    if (durum === "Kargoya Verildi") durumRenk = "#2563eb"; // Mavi
+                    if (durum === "Siparişiniz Teslim Edildi") durumRenk = "#15803d"; // Yeşil
+                    if (durum === "İptal Edildi") durumRenk = "#dc2626"; // Kırmızı
+                    if (durum === "İade Edildi") durumRenk = "#7c3aed"; // Mor
+
+                    // Sipariş tarihini Türkiye formatına çevirme
+                    const tarih = new Date(siparis.siparis_tarihi).toLocaleDateString("tr-TR", {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric"
+                    });
+
+                    let toplamfiyatgosterim = "";
+                    const toplamTutar = fiyatAyristir(siparis.toplam_ucret) || Number(siparis.toplam_ucret) || 0;
+
+                    if (indirimsiztoplam > toplamTutar) {
+                        toplamfiyatgosterim = `
+                    <div style="display: flex; flex-direction: column; align-items: flex-end;">
+                        <span style="color: #e11d48; font-weight:700; font-size: 15px;" class="urun-fiyat">${formatTL(toplamTutar)}</span>
+                        <span style="text-decoration: line-through; color: #94a3b8; font-size: 12px;" class="urun-fiyat">${formatTL(indirimsiztoplam)}</span>
+                    </div>
+                `;
+                    } else {
+                        toplamfiyatgosterim = `<div class="urun-fiyat">${formatTL(toplamTutar)}</div>`;
+                    }
+
+                    // Sipariş kartını oluşturup DOM'a ekleme
+                    const kart = document.createElement("div");
+                    kart.className = "siparis-karti";
+                    kart.innerHTML = `
+                <div class="siparis-ust">
+                    <div>
+                        Sipariş Kodu: <b>#${siparis.siparis_id}</b>
+                        <p style="margin-top: 4px;">Sipariş Özeti: <b>1 Teslimat, ${count} Ürün</b></p>
+                    </div>
+                    <div>
+                        <p>Alıcı: <b>${alici_adi}</b></p>
+                        <p style="margin-top: 4px;">Sipariş Durumu: <b style="color: ${durumRenk};">${durum}</b></p>
+                    </div>
+                    <div>Tarih: <b>${tarih}</b></div>
+                </div>
+                <div class="siparis-govde">
+                    <div class="urunler-listesi">
+                        ${urunlerHtml}
+                    </div>
+                    <div class="siparis-ozet">
+                        <div class="toplam-fiyat-kutusu">
+                            <div class="toplam-etiket">Toplam Tutar</div>
+                            <div class="toplam-deger">${toplamfiyatgosterim}</div>
+                        </div>
+                        <div class="adres-kutusu">
+                            <div class="adres-baslik">Teslimat Adresi</div>
+                            <div class="adres-metin">${siparis.adres || "Adres belirtilmedi"}</div>
+                        </div>
+
+                        <button type="button" onclick="siparis_iptal_iade('${siparis.siparis_id}', '${durum}')" style="margin-top:10px; background-color: #ef4444; color: white; border: none; border-radius: 5px; padding: 10px; cursor: pointer; font-weight: 600;">İptal/İade Et</button>
+                        <button type="button" style="margin-top:10px; background-color: #10b981; color: white; border: none; border-radius: 5px; padding: 10px; cursor: pointer; font-weight: 600;">Değerlendir</button>
+                    </div>
+                </div>
+            `;
+
+                    siparisKonteyner.appendChild(kart);
+                });
+
+            } catch (err) {
+                console.error(err);
+                siparisKonteyner.innerHTML = `
+            <div class="mesaj-kutusu" style="color: #e11d48;">
+                <p>Siparişler yüklenirken bir hata oluştu.</p>
+            </div>`;
+            }
+        }
+
+        // Sayfa açıldığında siparişleri çek
+        siparisleriGetir();
+
+        // =========================================================
+        // SAYFA YÜKLENDİĞİNDE OTURUM VE SOL MENÜ YÖNETİMİ
+        // =========================================================
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const aktifKullanici = aktifKullaniciGetir();
+            const loginBtn = document.getElementById("nav-login-btn");
+            const userMenu = document.getElementById("user-menu");
+
+            if (aktifKullanici) {
+                // 1. Giriş yapılmışsa: Giriş Yap butonunu gizle, Hesabım menüsünü görünür yap
+                if (loginBtn) loginBtn.classList.add("d-none");
+                if (userMenu) userMenu.classList.remove("d-none");
+
+                const ad = aktifKullanici.ad;
+                const soyad = aktifKullanici.soyad;
+                const tamAd = `${ad} ${soyad.toUpperCase()}`.trim();
+                const basHarfler = `${ad.charAt(0)}${soyad.charAt(0)}`.toUpperCase() || "U";
+
+                // 2. İsim ve Baş Harfleri Header ve Sidebar'a yazdır
+                const menuFullname = document.getElementById("menu-fullname");
+                const menuAvatar = document.getElementById("menu-avatar-badge");
+                const userFullname = document.getElementById("user-fullname");
+                const userAvatar = document.getElementById("user-avatar-badge");
+                const profileLogout = document.getElementById("profile-logout-btn");
+                const logoutBtn = document.getElementById("logout-btn");
+
+                if (menuFullname) menuFullname.textContent = tamAd;
+                if (menuAvatar) menuAvatar.textContent = basHarfler;
+                if (userFullname) userFullname.textContent = tamAd;
+                if (userAvatar) userAvatar.textContent = basHarfler;
+
+                // 3. Çıkış Yap Butonları
+                const cikisYap = (e) => {
+                    e.preventDefault();
+                    localStorage.removeItem("aktifKullanici");
+                    window.location.href = "index.html";
+                };
+
+                if (profileLogout) profileLogout.onclick = cikisYap;
+                if (logoutBtn) logoutBtn.onclick = cikisYap;
+            } else {
+                // Oturum yoksa: Giriş Yap görünsün, Hesabım gizlensin
+                if (loginBtn) loginBtn.classList.remove("d-none");
+                if (userMenu) userMenu.classList.add("d-none");
+            }
+        });
+
+        // =========================================================
+        // SİPARİŞ SİLME MOTORU (DELETE API ENTEGRASYONU)
+        // =========================================================
+
+        /**
+         * /api/siparislerim/sil endpoint'ine DELETE isteği atarak siparişi veritabanından siler.
+         */
+        async function siparis_sil(siparis_id) {
+            if (!confirm("Bu siparişi silmek istediğinize emin misiniz?")) return;
+
+            try {
+                const response = await fetch(`http://localhost:5192/api/siparislerim/sil?siparis_id=${siparis_id}`, {
+                    method: "DELETE"
+                });
+
+                const veri = await response.json().catch(() => null);
+
+                if (!response.ok) {
+                    const hataDetay = (veri && veri.mesaj) || `HTTP Hata Kodu: ${response.status}`;
+                    throw new Error(hataDetay);
+                }
+
+                alert("Sipariş başarıyla silindi.");
+                window.location.reload();
+            } catch (error) {
+                console.error("Silme Hatası:", error);
+                alert(`Hata: ${error.message}`);
+            }
+        }
+    </script>
+
+</body>
+
+</html>

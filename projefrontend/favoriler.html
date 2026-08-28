@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <!-- Karakter kodlaması ve mobil cihazlar için responsive ekran tanımı -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favori Ürünlerim</title>
+    <!-- Projenin harici CSS stil dosyası -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ========================================================================= -->
+    <!-- 1. ÜST KAMPANYA VE DUYURU BANNERI -->
+    <!-- ========================================================================= -->
+    <header>
+        <!-- <nav>
+            <a href="#">Ana Sayfa</a>
+        </nav> -->
+        <img class="header-img"
+            src="https://i.dr.com.tr/pimages/Content/Uploads/BannerFiles/dr/2026-TEMMUZ-SERINLETEN-URUNLER-HELLO-BAR1140X60.webp"
+            alt="">
+    </header>
+
+    <!-- ========================================================================= -->
+    <!-- 2. ANA HEADER (LOGO, ARAMA FORMU, İNDİRİMLER VE KULLANICI DROPDOWN MENÜSÜ) -->
+    <!-- ========================================================================= -->
+    <header class="header1">
+
+        <!-- Logo alanı: Tıklandığında ana sayfaya yönlendirir -->
+        <div class="logo">
+            <a href="index.html">
+                <img class="logo_img" src="/image/logo.jpg" alt="Logo">
+            </a>
+        </div>
+
+        <!-- Arama Çubuğu: Backend /api/genel endpoint'ine 'kelime' GET parametresi gönderir -->
+        <div class="search-box">
+            <form class="search-container" action="http://localhost:5192/api/genel" method="GET" role="search">
+
+                <div class="search-input-wrapper">
+                    <input type="search" class="search-input" name="kelime"
+                        placeholder="Ürün, kategori veya marka arayın..." maxlength="60" autocomplete="off"
+                        aria-label="Ürün arama" />
+                </div>
+
+                <button type="submit" class="search-submit-btn">Ara</button>
+            </form>
+        </div>
+
+        <!-- İndirimli ürünleri doğrudan filtreleyen tetikleyici buton (script.js üzerinden yönetilir) -->
+        <span><button class="search-discount" type="button" onclick="indirimliUrunleriGetir()">İndirimli
+                Ürünler</button></span>
+
+        <!-- Kullanıcı Durum & Aksiyon Menüsü (Giriş/Kayıt, Profil Dropdown, Favoriler, Sepet) -->
+        <div class="header1-actions">
+
+            <!-- Ziyaretçi Giriş/Kayıt Butonu (Kullanıcı giriş yaptığında script.js tarafından 'd-none' eklenir) -->
+            <a href="uye.html" class="header1-item" id="nav-login-btn">
+                <span class="icon">👤</span>
+                <span>Giriş Yap/Kayıt Ol</span>
+            </a>
+
+            <!-- Aktif Kullanıcı Profil Dropdown Menüsü (Oturum açıkken 'd-none' kaldırılarak gösterilir) -->
+            <div class="header1-item user-dropdown d-none" id="user-menu">
+                <div class="user-dropdown-trigger">
+                    <span class="icon">👤</span>
+                    <span>Hesabım</span>
+                </div>
+                <div class="dropdown-content">
+                    <div class="user-info-row">
+                        <!-- Kullanıcı ad-soyad baş harflerinin dinamik gösterildiği avatar -->
+                        <div class="user-avatar" id="user-avatar-badge">BÇ</div>
+                        <div class="user-details">
+                            <span class="greeting">Merhaba</span>
+                            <!-- Kullanıcı tam adı script.js tarafından dinamik yazılır -->
+                            <span class="user-fullname" id="user-fullname">Berkay ÇÜRÜK</span>
+                        </div>
+                    </div>
+                    <hr class="dropdown-divider">
+
+                    <!-- Kullanıcı profil ve üyelik bilgileri sayfası -->
+                    <a href="hesabim.html" class="dropdown-menu-item"
+                        style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; text-decoration: none; color: #334155; font-size: 14px; border-radius: 6px; transition: background-color 0.2s;">
+                        <span>👤</span>
+                        <span>Hesabım</span>
+                    </a>
+
+                    <hr class="dropdown-divider">
+
+                    <!-- Kullanıcının geçmiş siparişler sayfası -->
+                    <a href="siparis.html" class="dropdown-menu-item"
+                        style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; text-decoration: none; color: #334155; font-size: 14px; border-radius: 6px; transition: background-color 0.2s;">
+                        <span>📦</span>
+                        <span>Siparişlerim</span>
+                    </a>
+
+                    <hr class="dropdown-divider">
+                    <!-- Oturumu kapatıp localStorage'ı temizleyen çıkış butonu -->
+                    <button id="logout-btn" class="logout-link" type="button">Çıkış Yap</button>
+                </div>
+            </div>
+
+            <!-- Favorilerim Kısayolu -->
+            <a href="favoriler.html" class="header1-item">
+                <span class="icon">♡</span>
+                <span>Favoriler</span>
+            </a>
+
+            <!-- Sepetim Kısayolu -->
+            <a href="sepet.html" class="header1-item">
+                <span class="icon">🛒</span>
+                <span>Sepetim</span>
+            </a>
+
+        </div>
+    </header>
+
+    <!-- Kategori Menü Butonları -->
+    <div class="kategori-div">
+        <span><button class="kategori" type="button"><a href='kitaplar.html'>Kitaplar</a></button></span>
+        <span><button class="kategori" type="button"><a href='elektronik.html'>Elektronik</a></button></span>
+        <span><button class="kategori" type="button"><a href='hobi.html'>Hobi</a></button></span>
+        <span><button class="kategori" type="button"><a href='kirtasiye.html'>Kırtasiye</a></button></span>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- 3. ANA DÜZEN (SOL PROFİL & HESAP MENÜSÜ + SAĞ FAVORİLER LİSTESİ) -->
+    <!-- ========================================================================= -->
+    <main class="page-container">
+        <!-- SOL PANEL: Kullanıcı kartı ve hesap navigasyon listesi -->
+        <aside class="sidebar-wrapper" style="width: 500px;">
+            <div class="dr-account-card" id="user-profile-menu">
+                <div class="user-header">
+                    <div class="user-avatar-sq" id="menu-avatar-badge">BÇ</div>
+                    <div class="user-text-info">
+                        <span class="greeting-text">Merhaba,</span>
+                        <strong class="user-fullname-text" id="menu-fullname">Kullanıcı Adı</strong>
+                    </div>
+                </div>
+
+                <ul class="account-menu-list">
+                    <li>
+                        <a href="siparis.html" class="menu-link">Siparişlerim</a>
+                    </li>
+                    <li>
+                        <!-- Aktif sayfa vurgusu (active-link) -->
+                        <a href="favoriler.html" class="menu-link active-link">
+                            <span>Favorilerim</span>
+                            <span class="arrow-icon">›</span>
+                        </a>
+                    </li>
+                    <li><a href="#" class="menu-link">Değerlendirmelerim</a></li>
+                    <li>
+                        <a href="#" class="menu-link">
+                            <span>Kitaplığım</span>
+                            <!-- <span class="badge-new">Yeni</span> -->
+                        </a>
+                    </li>
+                    <li><a href="#" class="menu-link">Hediye Kartlarım</a></li>
+                </ul>
+
+                <div class="logout-wrapper">
+                    <!-- Sol menü çıkış butonu -->
+                    <button type="button" class="red-logout-btn" id="profile-logout-btn">Çıkış Yap</button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- SAĞ PANEL: Favori Ürün Kartlarının Listelendiği Alan -->
+        <section class="fav-items-container">
+            <h2>Favori Ürünlerim</h2>
+            <hr style="border:0; border-top:1px solid #eee; margin:15px 0;">
+            <!-- script.js (faviYukle) fonksiyonunun localStorage'daki favori ürün kartlarını bastığı kapsayıcı div -->
+            <div id="fav-list">
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Genel site etkileşimleri, oturum kontrolleri ve favori render fonksiyonlarını içeren ana script -->
+    <script src="script.js"></script>
+
+    <!-- ========================================================================= -->
+    <!-- 4. SAYFA YÜKLENME VE BAŞLATMA SCRIPTİ -->
+    <!-- ========================================================================= -->
+    <script>
+        // DOM hazır olduğunda favorileri listelemek için tetiklenen ilk çağrı
+        document.addEventListener('DOMContentLoaded', () => {
+            faviYukle();
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Her sayfada kullanıcı durumunu ve profil menüsünü hazırla
+            if (typeof window.kullaniciDurumunuKontrolEt === 'function') {
+                window.kullaniciDurumunuKontrolEt();
+            }
+
+            // 2. Favoriler sayfasındaysak ve #fav-list elementi mevcutsa favori ürün listesini yükle
+            if (document.getElementById("fav-list")) {
+                faviYukle();
+            }
+        });
+    </script>
+    <script>
+        // Sadece bu sayfaya özel sol menüyü doldurur, ana fonksiyonlara dokunmaz
+        document.addEventListener('DOMContentLoaded', () => {
+            // LocalStorage'dan aktif kullanıcı bilgisini oku
+            const kayitliKullanici = localStorage.getItem("aktifKullanici");
+            if (!kayitliKullanici) return;
+
+            const user = JSON.parse(kayitliKullanici);
+            const ad = user.uye_ad || "";
+            const soyad = user.uye_soyad || "";
+            const tamAd = `${ad} ${soyad.toUpperCase()}`;
+            const basHarfler = `${ad.charAt(0)}${soyad.charAt(0)}`.toUpperCase() || "U";
+
+            // Sol karttaki isim ve baş harfleri yazdır
+            const menuFullname = document.getElementById("menu-fullname");
+            const menuAvatar = document.getElementById("menu-avatar-badge");
+            const profileLogout = document.getElementById("profile-logout-btn");
+
+            if (menuFullname) menuFullname.textContent = tamAd;
+            if (menuAvatar) menuAvatar.textContent = basHarfler;
+
+            // Kırmızı çıkış butonu tıklaması: Oturumu temizler ve ana sayfaya yönlendirir
+            if (profileLogout) {
+                profileLogout.onclick = (e) => {
+                    e.preventDefault();
+                    localStorage.removeItem("aktifKullanici");
+                    window.location.href = "index.html";
+                };
+            }
+        });
+    </script>
+
+</body>
+
+</html>
